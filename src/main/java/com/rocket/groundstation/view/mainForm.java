@@ -75,7 +75,7 @@ public class mainForm extends javax.swing.JFrame {
             map.getModel().displayModel.getTileSize(),
             1.0,
             1024,
-            new File("cache")
+            new File("maps/cache")
         );
         
         MapDataStore mapDataStore = new MapFile(new File("maps/Brasil-Coast-South_oam.osm.map"));
