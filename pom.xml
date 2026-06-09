@@ -29,6 +29,12 @@
             <artifactId>mapsforge-map-reader</artifactId>
             <version>0.25.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.mapsforge</groupId>
+            <artifactId>mapsforge-themes</artifactId>
+            <version>0.25.0</version>
+        </dependency>
     </dependencies>
 
 </project>

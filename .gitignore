@@ -26,7 +26,12 @@
 /local/
 /dist/
 /target/
-/maps/*.maps
+/maps/*.map
+/maps/themes/**
+!/maps/themes/.gitkeep
+/maps/cache/**
+!/maps/cache/.gitkeep
+
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
