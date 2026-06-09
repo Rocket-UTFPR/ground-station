@@ -1,10 +1,18 @@
 package com.rocket.groundstation.view;
 
 import java.awt.BorderLayout;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JButton;
-import org.mapsforge.map.awt.view.MapView;
+import java.io.File;
+import java.io.FileNotFoundException;
+import org.mapsforge.core.model.LatLong;
+import org.mapsforge.map.awt.graphics.*;
+import org.mapsforge.map.awt.util.*;
+import org.mapsforge.map.awt.view.*;
+import org.mapsforge.map.datastore.MapDataStore;
+import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
+import org.mapsforge.map.rendertheme.ExternalRenderTheme;
+import org.mapsforge.map.reader.MapFile;
+import org.mapsforge.map.layer.cache.TileCache;
+import org.mapsforge.map.layer.renderer.TileRendererLayer;
 
 
 public class mainForm extends javax.swing.JFrame {
@@ -13,7 +21,7 @@ public class mainForm extends javax.swing.JFrame {
     public mainForm() {
         initComponents();
         setLocationRelativeTo(null);
-        seila();
+        initMap();
     }
 
     
@@ -56,18 +64,50 @@ public class mainForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
-    public void seila(){
+        
+    private void initMap(){
         MapView map = new MapView();
         
         mapPanel.setLayout(new BorderLayout());
         mapPanel.add(map, BorderLayout.CENTER);
+                
+        TileCache tileCache = AwtUtil.createTileCache(
+            map.getModel().displayModel.getTileSize(),
+            1.0,
+            1024,
+            new File("cache")
+        );
+        
+        MapDataStore mapDataStore = new MapFile(new File("maps/Brasil-Coast-South_oam.osm.map"));
+        
+        TileRendererLayer tileRendererLayer = new TileRendererLayer(
+                tileCache,
+                mapDataStore,
+                map.getModel().mapViewPosition,
+                false, true, false,
+                AwtGraphicFactory.INSTANCE                
+        );
+        
+        try{
+            tileRendererLayer.setXmlRenderTheme(new ExternalRenderTheme(new File("maps/themes/elevate/Elevate.xml")));
+            map.getModel().displayModel.setUserScaleFactor(1.6f);
+        } catch(FileNotFoundException e){
+            tileRendererLayer.setXmlRenderTheme(MapsforgeThemes.BIKER);
+            map.getModel().displayModel.setUserScaleFactor(1.3f);
+        }
+        
+        map.getLayerManager().getLayers().add(tileRendererLayer);        
+        
+        map.getModel().mapViewPosition.setCenter(
+                new LatLong(-21.886998, -49.083419)
+        );
+        
+        map.getModel().mapViewPosition.setZoomLevelMin((byte) 6);
+        
+        map.getModel().mapViewPosition.setZoomLevel((byte) 10);                
         
         mapPanel.revalidate();
         mapPanel.repaint();
-        
-        
     }
     
     
