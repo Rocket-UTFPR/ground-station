@@ -26,7 +26,7 @@
 /local/
 /dist/
 /target/
-/maps/*.maps
+/maps/*.map
 /maps/themes/**
 !/maps/themes/.gitkeep
 /cache/**
