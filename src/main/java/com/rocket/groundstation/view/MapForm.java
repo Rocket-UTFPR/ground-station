@@ -1,5 +1,6 @@
 package com.rocket.groundstation.view;
 
+import com.rocket.groundstation.app.GroundStation;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,6 +31,7 @@ public class MapForm extends javax.swing.JFrame {
     private void initComponents() {
 
         mapPanel = new javax.swing.JPanel();
+        pingButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -37,17 +39,28 @@ public class MapForm extends javax.swing.JFrame {
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 980, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 698, Short.MAX_VALUE)
+            .addGap(0, 663, Short.MAX_VALUE)
         );
+
+        pingButton.setText("Click to ping esp");
+        pingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pingButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(pingButton)
+                .addContainerGap(989, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -56,13 +69,19 @@ public class MapForm extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(26, 26, 26)
+                .addComponent(pingButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void pingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pingButtonActionPerformed
+        GroundStation.sendPing();
+    }//GEN-LAST:event_pingButtonActionPerformed
 
         
     private void initMap(){
@@ -134,14 +153,7 @@ public class MapForm extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MapForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+        //</editor-fold>               
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -153,5 +165,6 @@ public class MapForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel mapPanel;
+    private javax.swing.JButton pingButton;
     // End of variables declaration//GEN-END:variables
 }
