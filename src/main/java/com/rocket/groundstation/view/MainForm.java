@@ -1,13 +1,17 @@
 package com.rocket.groundstation.view;
 
+import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JInternalFrame;
 
-public class MainForm extends javax.swing.JFrame {
-    private MapInternalFrame mapInternalFrame;
+
+public class MainForm extends javax.swing.JFrame {    
     
     public MainForm() {
         initComponents();
         setLocationRelativeTo(null);
-        mapInternalFrame = new MapInternalFrame();
     }
 
     
@@ -15,34 +19,29 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jDesktopPane1 = new javax.swing.JDesktopPane();
-        jButton1 = new javax.swing.JButton();
+        desktop = new javax.swing.JDesktopPane();
+        openMapBt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        openMapBt.setText("Abrir mapa");
 
-        jDesktopPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop.setLayer(openMapBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
-        jDesktopPane1.setLayout(jDesktopPane1Layout);
-        jDesktopPane1Layout.setHorizontalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDesktopPane1Layout.createSequentialGroup()
+        javax.swing.GroupLayout desktopLayout = new javax.swing.GroupLayout(desktop);
+        desktop.setLayout(desktopLayout);
+        desktopLayout.setHorizontalGroup(
+            desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(desktopLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(jButton1)
-                .addContainerGap(886, Short.MAX_VALUE))
+                .addComponent(openMapBt)
+                .addContainerGap(872, Short.MAX_VALUE))
         );
-        jDesktopPane1Layout.setVerticalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
+        desktopLayout.setVerticalGroup(
+            desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, desktopLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
-                .addComponent(jButton1)
+                .addComponent(openMapBt)
                 .addContainerGap(624, Short.MAX_VALUE))
         );
 
@@ -50,21 +49,48 @@ public class MainForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jDesktopPane1.remove(mapInternalFrame);
-        jDesktopPane1.add(mapInternalFrame).setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
                 
+    public void addOpenMapBtListener(ActionListener al){
+        openMapBt.addActionListener(al);
+    }
+    
+    public void showInFrame(JInternalFrame inFrame){        
+        boolean added = false;        
+        for(JInternalFrame f : desktop.getAllFrames()){
+            if(f == inFrame){
+                added = true;                
+                break;
+            }
+        }
+        if(!added) desktop.add(inFrame);
+        
+        if(!inFrame.isVisible()){
+            inFrame.setLocation(
+                    (desktop.getWidth() - inFrame.getWidth()) / 2, 
+                    (desktop.getHeight() - inFrame.getHeight()) / 2
+            );
+        }
+        
+        inFrame.setVisible(true);        
+        try {            
+            inFrame.setIcon(false);        
+            inFrame.setSelected(true);
+            inFrame.toFront();
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -99,7 +125,7 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JDesktopPane desktop;
+    private javax.swing.JButton openMapBt;
     // End of variables declaration//GEN-END:variables
 }
