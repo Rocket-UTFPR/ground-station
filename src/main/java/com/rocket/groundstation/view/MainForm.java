@@ -1,17 +1,19 @@
 package com.rocket.groundstation.view;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 
 
 public class MainForm extends javax.swing.JFrame {    
     
-    public MainForm() {
+    public MainForm() {        
         initComponents();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null);        
     }
 
     
@@ -23,6 +25,11 @@ public class MainForm extends javax.swing.JFrame {
         openMapBt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
 
         openMapBt.setText("Abrir mapa");
 
@@ -58,6 +65,13 @@ public class MainForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        this.dispose();
+        this.setUndecorated(true);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setVisible(true);
+    }//GEN-LAST:event_formKeyPressed
                 
     public void addOpenMapBtListener(ActionListener al){
         openMapBt.addActionListener(al);
