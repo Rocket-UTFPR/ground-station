@@ -94,8 +94,12 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameClosing
 
-    public void addDisplayModeListenerCb(ItemListener il){
+    public void addDisplayModeCbListener(ItemListener il){
         displayModeCb.addItemListener(il);
+    }
+    
+    public void setDisplayModeCbSelected(int s){
+        if(!(displayModeCb.getSelectedIndex()==s)) displayModeCb.setSelectedIndex(s);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -5,22 +5,30 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.KeyStroke;
 
 
 public class MainForm extends javax.swing.JFrame {    
     private Rectangle windowBounds;
     private DisplayMode displayMode;
+    private DisplayMode oldDisplayMode;
     private final GraphicsDevice graphicsDevice;
     
     public MainForm() {        
         initComponents();
         setLocationRelativeTo(null);        
+        
         displayMode = DisplayMode.WINDOWED;
+        oldDisplayMode = DisplayMode.BORDERLESSWINDOW;
         windowBounds = getBounds();
         graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     }
@@ -86,6 +94,14 @@ public class MainForm extends javax.swing.JFrame {
         settingsBt.addActionListener(al);
     }
     
+    public void addToggleFullscreenAction(Action action) {
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0),
+                "toggleFullscreen"
+        );
+        getRootPane().getActionMap().put("toggleFullscreen", action);
+    }
+    
     public void showInFrame(JInternalFrame inFrame){        
         boolean added = false;        
         for(JInternalFrame f : desktop.getAllFrames()){
@@ -115,7 +131,8 @@ public class MainForm extends javax.swing.JFrame {
     }
     
     public void setDisplayMode(DisplayMode mode) {
-        if(mode==displayMode) return;
+        if(mode==null) return;
+        if(mode==displayMode) return;        
         
         if(displayMode==DisplayMode.WINDOWED && !(getExtendedState()==JFrame.MAXIMIZED_BOTH)) 
             windowBounds = getBounds();
@@ -146,9 +163,18 @@ public class MainForm extends javax.swing.JFrame {
                 graphicsDevice.setFullScreenWindow(this);
             }
         }
+        oldDisplayMode = displayMode;
         displayMode = mode;
     }
+        
+    public DisplayMode getDisplayMode(){
+        return displayMode;
+    }
     
+    public DisplayMode getOldDisplayMode(){
+        return oldDisplayMode;
+    }
+
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
