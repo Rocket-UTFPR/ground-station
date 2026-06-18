@@ -1,6 +1,5 @@
 package com.rocket.groundstation.view;
 
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
