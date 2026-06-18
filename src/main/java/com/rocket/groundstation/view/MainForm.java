@@ -1,5 +1,9 @@
 package com.rocket.groundstation.view;
 
+import com.rocket.groundstation.model.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
@@ -9,10 +13,15 @@ import javax.swing.JInternalFrame;
 
 
 public class MainForm extends javax.swing.JFrame {    
+    private Rectangle windowBounds;
+    private DisplayMode displayMode;
+    private final GraphicsDevice graphicsDevice;
     
     public MainForm() {        
         initComponents();
         setLocationRelativeTo(null);        
+        displayMode = DisplayMode.WINDOWED;
+        graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     }
 
     
@@ -22,6 +31,7 @@ public class MainForm extends javax.swing.JFrame {
 
         desktop = new javax.swing.JDesktopPane();
         openMapBt = new javax.swing.JButton();
+        settingsBt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addKeyListener(new java.awt.event.KeyAdapter() {
@@ -30,9 +40,12 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        openMapBt.setText("Abrir mapa");
+        openMapBt.setText("Mapa");
+
+        settingsBt.setText("Opções");
 
         desktop.setLayer(openMapBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop.setLayer(settingsBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout desktopLayout = new javax.swing.GroupLayout(desktop);
         desktop.setLayout(desktopLayout);
@@ -40,15 +53,19 @@ public class MainForm extends javax.swing.JFrame {
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(desktopLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(openMapBt)
-                .addContainerGap(872, Short.MAX_VALUE))
+                .addGroup(desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(settingsBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(openMapBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(889, Short.MAX_VALUE))
         );
         desktopLayout.setVerticalGroup(
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, desktopLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
-                .addComponent(openMapBt)
-                .addContainerGap(624, Short.MAX_VALUE))
+                .addComponent(openMapBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(232, 232, 232)
+                .addComponent(settingsBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(347, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -74,6 +91,10 @@ public class MainForm extends javax.swing.JFrame {
                 
     public void addOpenMapBtListener(ActionListener al){
         openMapBt.addActionListener(al);
+    }
+    
+    public void addOpenSettingsBtListener(ActionListener al){
+        settingsBt.addActionListener(al);
     }
     
     public void showInFrame(JInternalFrame inFrame){        
@@ -102,6 +123,40 @@ public class MainForm extends javax.swing.JFrame {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+    }
+    
+    public void setDisplayMode(DisplayMode mode) {
+        if(mode==displayMode) return;
+        
+        if(displayMode==DisplayMode.WINDOWED) windowBounds = getBounds();
+        
+        switch(mode){            
+            case WINDOWED -> {
+                graphicsDevice.setFullScreenWindow(null);                
+                dispose();
+                setUndecorated(false);
+                setExtendedState(JFrame.NORMAL);                
+                if(windowBounds!=null) setBounds(windowBounds);               
+                
+                setVisible(true);
+            }
+            case BORDERLESSWINDOW -> {
+                graphicsDevice.setFullScreenWindow(null);
+                dispose();
+                setUndecorated(true);
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+                setVisible(true);
+            }
+            case FULLSCREEN -> {
+                dispose();
+                setUndecorated(true);
+                setVisible(true);
+
+                graphicsDevice.setFullScreenWindow(this);
+            }
+        }
+        displayMode = mode;
     }
     
     
@@ -140,5 +195,6 @@ public class MainForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
     private javax.swing.JButton openMapBt;
+    private javax.swing.JButton settingsBt;
     // End of variables declaration//GEN-END:variables
 }

@@ -41,10 +41,13 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                  <Component id="openMapBt" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="872" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="settingsBt" max="32767" attributes="0"/>
+                      <Component id="openMapBt" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="889" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -52,8 +55,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
-                  <Component id="openMapBt" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="624" max="32767" attributes="0"/>
+                  <Component id="openMapBt" min="-2" pref="36" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="232" max="-2" attributes="0"/>
+                  <Component id="settingsBt" min="-2" pref="36" max="-2" attributes="0"/>
+                  <EmptySpace pref="347" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -61,7 +66,12 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="openMapBt">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Abrir mapa"/>
+            <Property name="text" type="java.lang.String" value="Mapa"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="settingsBt">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Op&#xe7;&#xf5;es"/>
           </Properties>
         </Component>
       </SubComponents>

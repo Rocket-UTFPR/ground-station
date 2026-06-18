@@ -1,6 +1,7 @@
 package com.rocket.groundstation.app;
 
 import com.rocket.groundstation.controller.MainController;
+import com.rocket.groundstation.model.SettingsModel;
 import com.rocket.groundstation.view.MainForm;
 import javax.swing.SwingUtilities;
 
@@ -19,8 +20,9 @@ public class GroundStation {
         } catch (Exception ex) {}
         
         SwingUtilities.invokeLater(()->{
+                SettingsModel settingsModel = new SettingsModel();
                 MainForm mainForm = new MainForm();
-                MainController mainController = new MainController(mainForm);
+                MainController mainController = new MainController(mainForm, settingsModel);
                 mainController.start();
         });
     }
