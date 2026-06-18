@@ -14,9 +14,20 @@ public class SettingsModel {
     
     public void setDisplayMode(Object o){
         DisplayMode old = displayMode;
-        displayMode = DisplayMode.getDisplayMode(o);
+        displayMode = DisplayMode.valueOf(o);
     
         pcs.firePropertyChange("displayMode", old, displayMode);
+    }
+    
+    public void setDisplayMode(DisplayMode dm){
+        DisplayMode old = displayMode;
+        displayMode = dm;
+    
+        pcs.firePropertyChange("displayMode", old, displayMode);
+    }
+    
+    public DisplayMode getDisplayMode(){
+        return displayMode;
     }
     
     public void addPropertyChangeListener(PropertyChangeListener listener) {

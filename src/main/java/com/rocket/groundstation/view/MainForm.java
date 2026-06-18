@@ -5,22 +5,31 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.KeyStroke;
 
 
 public class MainForm extends javax.swing.JFrame {    
     private Rectangle windowBounds;
     private DisplayMode displayMode;
+    private DisplayMode oldDisplayMode;
     private final GraphicsDevice graphicsDevice;
     
     public MainForm() {        
         initComponents();
         setLocationRelativeTo(null);        
+        
         displayMode = DisplayMode.WINDOWED;
+        oldDisplayMode = DisplayMode.BORDERLESSWINDOW;
+        windowBounds = getBounds();
         graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     }
 
@@ -34,11 +43,6 @@ public class MainForm extends javax.swing.JFrame {
         settingsBt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                formKeyPressed(evt);
-            }
-        });
 
         openMapBt.setText("Mapa");
 
@@ -63,7 +67,7 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, desktopLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addComponent(openMapBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(232, 232, 232)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
                 .addComponent(settingsBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(347, Short.MAX_VALUE))
         );
@@ -81,13 +85,6 @@ public class MainForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        this.dispose();
-        this.setUndecorated(true);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setVisible(true);
-    }//GEN-LAST:event_formKeyPressed
                 
     public void addOpenMapBtListener(ActionListener al){
         openMapBt.addActionListener(al);
@@ -95,6 +92,14 @@ public class MainForm extends javax.swing.JFrame {
     
     public void addOpenSettingsBtListener(ActionListener al){
         settingsBt.addActionListener(al);
+    }
+    
+    public void addToggleFullscreenAction(Action action) {
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0),
+                "toggleFullscreen"
+        );
+        getRootPane().getActionMap().put("toggleFullscreen", action);
     }
     
     public void showInFrame(JInternalFrame inFrame){        
@@ -126,9 +131,11 @@ public class MainForm extends javax.swing.JFrame {
     }
     
     public void setDisplayMode(DisplayMode mode) {
-        if(mode==displayMode) return;
+        if(mode==null) return;
+        if(mode==displayMode) return;        
         
-        if(displayMode==DisplayMode.WINDOWED) windowBounds = getBounds();
+        if(displayMode==DisplayMode.WINDOWED && !(getExtendedState()==JFrame.MAXIMIZED_BOTH)) 
+            windowBounds = getBounds();
         
         switch(mode){            
             case WINDOWED -> {
@@ -156,9 +163,18 @@ public class MainForm extends javax.swing.JFrame {
                 graphicsDevice.setFullScreenWindow(this);
             }
         }
+        oldDisplayMode = displayMode;
         displayMode = mode;
     }
+        
+    public DisplayMode getDisplayMode(){
+        return displayMode;
+    }
     
+    public DisplayMode getOldDisplayMode(){
+        return oldDisplayMode;
+    }
+
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

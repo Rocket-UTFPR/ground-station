@@ -2,7 +2,10 @@ package com.rocket.groundstation.controller;
 
 import com.rocket.groundstation.model.*;
 import com.rocket.groundstation.view.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
+import javax.swing.AbstractAction;
 
 
 public class MainController {
@@ -18,6 +21,7 @@ public class MainController {
         
         mainForm.addOpenMapBtListener((e)->openMapInFrame());
         mainForm.addOpenSettingsBtListener((e)->openSettingsInFrame());
+        mainForm.addToggleFullscreenAction(desktopToggleDisplayMode());
         settings.addPropertyChangeListener((e)->settingsChanged(e));
     }
 
@@ -35,6 +39,17 @@ public class MainController {
         if(settingsInFrameCtrl==null) 
             settingsInFrameCtrl = new SettingsInFrameController(new SettingsInFrame(), settings);
         mainForm.showInFrame(settingsInFrameCtrl.getSettingsInFrame());
+    }
+    
+    private AbstractAction desktopToggleDisplayMode(){
+        return new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(mainForm.getDisplayMode()==DisplayMode.WINDOWED) 
+                    settings.setDisplayMode(mainForm.getOldDisplayMode());
+                else settings.setDisplayMode(DisplayMode.WINDOWED);
+            }
+        };
     }
     
     private void settingsChanged(PropertyChangeEvent e){

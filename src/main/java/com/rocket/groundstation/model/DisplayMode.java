@@ -6,7 +6,7 @@ public enum DisplayMode {
     FULLSCREEN,
     BORDERLESSWINDOW;
     
-    public static DisplayMode getDisplayMode(Object o){
+    public static DisplayMode valueOf(Object o){
         if(o.equals("Janela")) return WINDOWED;
         else if(o.equals("Tela cheia")) return FULLSCREEN;        
         else if(o.equals("Janela sem bordas")) return BORDERLESSWINDOW;
