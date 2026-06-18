@@ -30,12 +30,16 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        splitPanel = new javax.swing.JPanel();
+        split = new javax.swing.JSplitPane();
         mapPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
+        setTitle("Mapa");
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -56,26 +60,47 @@ public class MapInFrame extends javax.swing.JInternalFrame {
             }
         });
 
+        split.setDividerLocation(700);
+        split.setResizeWeight(0.5);
+
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 732, Short.MAX_VALUE)
+            .addGap(0, 700, Short.MAX_VALUE)
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 493, Short.MAX_VALUE)
+            .addGap(0, 557, Short.MAX_VALUE)
+        );
+
+        split.setLeftComponent(mapPanel);
+
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBar(null);
+        jScrollPane1.setVerifyInputWhenFocusTarget(false);
+        split.setRightComponent(jScrollPane1);
+
+        javax.swing.GroupLayout splitPanelLayout = new javax.swing.GroupLayout(splitPanel);
+        splitPanel.setLayout(splitPanelLayout);
+        splitPanelLayout.setHorizontalGroup(
+            splitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(split, javax.swing.GroupLayout.DEFAULT_SIZE, 826, Short.MAX_VALUE)
+        );
+        splitPanelLayout.setVerticalGroup(
+            splitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(split)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(splitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(splitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -99,6 +124,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void initMap(){
+        
         MapView map = new MapView();
         
         mapPanel.setLayout(new BorderLayout());
@@ -147,6 +173,9 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel mapPanel;
+    private javax.swing.JSplitPane split;
+    private javax.swing.JPanel splitPanel;
     // End of variables declaration//GEN-END:variables
 }
