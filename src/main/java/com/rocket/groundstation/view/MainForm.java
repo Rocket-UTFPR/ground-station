@@ -21,6 +21,7 @@ public class MainForm extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);        
         displayMode = DisplayMode.WINDOWED;
+        windowBounds = getBounds();
         graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     }
 
@@ -34,11 +35,6 @@ public class MainForm extends javax.swing.JFrame {
         settingsBt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                formKeyPressed(evt);
-            }
-        });
 
         openMapBt.setText("Mapa");
 
@@ -63,7 +59,7 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, desktopLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addComponent(openMapBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(232, 232, 232)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
                 .addComponent(settingsBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(347, Short.MAX_VALUE))
         );
@@ -81,13 +77,6 @@ public class MainForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        this.dispose();
-        this.setUndecorated(true);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setVisible(true);
-    }//GEN-LAST:event_formKeyPressed
                 
     public void addOpenMapBtListener(ActionListener al){
         openMapBt.addActionListener(al);
@@ -128,7 +117,8 @@ public class MainForm extends javax.swing.JFrame {
     public void setDisplayMode(DisplayMode mode) {
         if(mode==displayMode) return;
         
-        if(displayMode==DisplayMode.WINDOWED) windowBounds = getBounds();
+        if(displayMode==DisplayMode.WINDOWED && !(getExtendedState()==JFrame.MAXIMIZED_BOTH)) 
+            windowBounds = getBounds();
         
         switch(mode){            
             case WINDOWED -> {
