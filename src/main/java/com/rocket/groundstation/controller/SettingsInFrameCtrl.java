@@ -7,11 +7,11 @@ import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
 
 
-public class SettingsInFrameController {
+public class SettingsInFrameCtrl {
     private SettingsInFrame settingsInFrame;
     private SettingsModel settings;
     
-    public SettingsInFrameController(SettingsInFrame settingsInFrame, SettingsModel settings){
+    public SettingsInFrameCtrl(SettingsInFrame settingsInFrame, SettingsModel settings){
         this.settingsInFrame = settingsInFrame;
         this.settings = settings;
         updateDisplayModeCb(settings.getDisplayMode());

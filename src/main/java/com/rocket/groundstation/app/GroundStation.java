@@ -1,7 +1,7 @@
 package com.rocket.groundstation.app;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.rocket.groundstation.controller.MainController;
+import com.rocket.groundstation.controller.MainCtrl;
 import com.rocket.groundstation.model.SettingsModel;
 import com.rocket.groundstation.service.DispatchService;
 import com.rocket.groundstation.service.SerialReadService;
@@ -25,7 +25,7 @@ public class GroundStation {
         SwingUtilities.invokeLater(()->{
                 SettingsModel settingsModel = new SettingsModel();
                 MainForm mainForm = new MainForm();
-                MainController mainController = new MainController(mainForm, settingsModel);
+                MainCtrl mainController = new MainCtrl(mainForm, settingsModel);
                 mainController.start();
         });
 //        DispatchService dispatcher = new DispatchService(null);        
