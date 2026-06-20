@@ -1,19 +1,22 @@
 package com.rocket.groundstation.model;
 
+import java.time.LocalDateTime;
 
-public class Gps {
+
+public class TelemetryModel {
     private double altitude;
     private double latitude;
-    private double longitude;    
+    private double longitude;
+    private LocalDateTime serialDateTime;
+    private LocalDateTime actualDateTime;
     
-    
-    public Gps(){
+    public TelemetryModel(){
         this.altitude = 0;
         this.latitude = 0;
         this.longitude = 0;
     }
     
-    public Gps(double altitude, double latitude, double longitude) {
+    public TelemetryModel(double altitude, double latitude, double longitude) {
         this.altitude = altitude;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -30,6 +33,14 @@ public class Gps {
     public double getLongitude() {
         return longitude;
     }
+    
+    public LocalDateTime getSerialDateTime() {
+        return serialDateTime;
+    }
+    
+    public LocalDateTime getActualDateTime() {
+        return actualDateTime;
+    }
 
     public void setAltitude(double altitude) {
         this.altitude = altitude;
@@ -41,6 +52,13 @@ public class Gps {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
-    }      
+    }
     
+    public void getSerialDateTime(LocalDateTime serialDateTime) {
+        this.serialDateTime = serialDateTime;
+    }
+    
+    public void getActualDateTime(LocalDateTime actualDateTime) {
+        this.actualDateTime = actualDateTime;
+    }
 }
