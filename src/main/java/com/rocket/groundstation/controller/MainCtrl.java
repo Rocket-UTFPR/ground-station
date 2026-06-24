@@ -1,5 +1,6 @@
 package com.rocket.groundstation.controller;
 
+import com.rocket.groundstation.app.AppCommons;
 import com.rocket.groundstation.model.*;
 import com.rocket.groundstation.view.*;
 import java.awt.event.ActionEvent;
@@ -10,14 +11,16 @@ import javax.swing.AbstractAction;
 public class MainCtrl {
     private final MainForm mainForm;
     private SettingsModel settings;
+    private AppCommons appCommons;
     private MapInFrameCtrl mapInFrCtrl;
     private SerialMonitorInFrameCtrl SerialMonitorInFrCtrl;
     private SettingsInFrameCtrl settingsInFrCtrl;
     
 
-    public MainCtrl(MainForm mainForm, SettingsModel settings) {       
+    public MainCtrl(MainForm mainForm, SettingsModel settings, AppCommons appCommons) {       
         this.mainForm = mainForm;
         this.settings = settings;
+        this.appCommons = appCommons;
         
         addEventListeners();        
     }
@@ -38,17 +41,20 @@ public class MainCtrl {
     
     private void openMapInFrame(){
         if(mapInFrCtrl==null) mapInFrCtrl = new MapInFrameCtrl(new MapInFrame());
+        
         mainForm.showInFrame(mapInFrCtrl.getMapInFrame());
     }
     
     private void openSerialMonitorInFrame(){
         if(SerialMonitorInFrCtrl==null) 
-            SerialMonitorInFrCtrl = new SerialMonitorInFrameCtrl(new SerialMonitorInFrame(), settings);
+            SerialMonitorInFrCtrl = new SerialMonitorInFrameCtrl(new SerialMonitorInFrame(), settings, appCommons);
+        
         mainForm.showInFrame(SerialMonitorInFrCtrl.getSerialMonitorInFrame());
     }
     
     private void openSettingsInFrame(){
         if(settingsInFrCtrl==null) settingsInFrCtrl = new SettingsInFrameCtrl(new SettingsInFrame(), settings);
+        
         mainForm.showInFrame(settingsInFrCtrl.getSettingsInFrame());
     }
     

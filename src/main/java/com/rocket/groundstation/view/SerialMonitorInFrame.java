@@ -1,5 +1,7 @@
 package com.rocket.groundstation.view;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,8 +24,8 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         baudLb = new javax.swing.JLabel();
         portLb = new javax.swing.JLabel();
         clearSerialBt = new javax.swing.JButton();
-        toggleSerialReadTb = new javax.swing.JToggleButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        serialReadTb = new javax.swing.JToggleButton();
+        autoScrollTb = new javax.swing.JToggleButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -55,6 +57,8 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         SerialTa.setEnabled(false);
         SerialSp.setViewportView(SerialTa);
 
+        baudCb.setModel(new javax.swing.DefaultComboBoxModel<>(new Integer[] { 9600, 115200 }));
+
         baudLb.setText("Baud:");
 
         portLb.setText("Porta:");
@@ -62,11 +66,11 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         clearSerialBt.setText("❌");
         clearSerialBt.setToolTipText("Limpar");
 
-        toggleSerialReadTb.setText("Iniciar leitura");
+        serialReadTb.setText("Iniciar leitura");
 
-        jToggleButton1.setSelected(true);
-        jToggleButton1.setText("⏬");
-        jToggleButton1.setToolTipText("Rolagem automática");
+        autoScrollTb.setSelected(true);
+        autoScrollTb.setText("⏬");
+        autoScrollTb.setToolTipText("Rolagem automática");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,18 +83,16 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(toggleSerialReadTb)
+                                .addComponent(serialReadTb)
                                 .addGap(438, 438, 438)
                                 .addComponent(baudLb))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(269, 269, 269)
-                                .addComponent(portLb)))
+                            .addComponent(portLb))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(baudCb, 0, 86, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                                .addComponent(jToggleButton1)
+                                .addComponent(autoScrollTb)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(clearSerialBt))
                             .addGroup(layout.createSequentialGroup()
@@ -110,8 +112,8 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
                     .addComponent(baudCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(baudLb)
                     .addComponent(clearSerialBt)
-                    .addComponent(toggleSerialReadTb)
-                    .addComponent(jToggleButton1))
+                    .addComponent(serialReadTb)
+                    .addComponent(autoScrollTb))
                 .addGap(18, 18, 18)
                 .addComponent(SerialSp, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                 .addContainerGap())
@@ -137,17 +139,48 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameClosing
 
+    public void appendBytes(byte[] bytes){
+        for(byte b : bytes){
+            SerialTa.append(String.valueOf((char) b));
+        }        
+    }
+    
+    public void updatePortsCb(String[] ports){
+        portsCb.removeAllItems();
+        for(String port : ports){
+            portsCb.addItem(port);
+        }
+    }
+    
+    public String getSelectedPort(){
+        return (String) portsCb.getSelectedItem();
+    }
         
+    public void portsCbSetEnabled(boolean enabled){
+        portsCb.setEnabled(enabled);
+    }
+    
+    public int getSelectedBaud(){
+        return (Integer) baudCb.getSelectedItem();
+    }
+    
+    public void addPortsCbListener(ItemListener il){
+        portsCb.addItemListener(il);
+    }        
+    
+    public void addSerialReadTbListener(ActionListener al){
+        serialReadTb.addActionListener(al);
+    }        
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane SerialSp;
     private javax.swing.JTextArea SerialTa;
-    private javax.swing.JComboBox<String> baudCb;
+    private javax.swing.JToggleButton autoScrollTb;
+    private javax.swing.JComboBox<Integer> baudCb;
     private javax.swing.JLabel baudLb;
     private javax.swing.JButton clearSerialBt;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel portLb;
     private javax.swing.JComboBox<String> portsCb;
-    private javax.swing.JToggleButton toggleSerialReadTb;
+    private javax.swing.JToggleButton serialReadTb;
     // End of variables declaration//GEN-END:variables
 }
