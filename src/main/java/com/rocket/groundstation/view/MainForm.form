@@ -43,8 +43,9 @@
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="settingsBt" max="32767" attributes="0"/>
                       <Component id="openMapBt" max="32767" attributes="0"/>
+                      <Component id="openSerialMonitorBt" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="889" max="32767" attributes="0"/>
+                  <EmptySpace pref="858" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -53,7 +54,9 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
                   <Component id="openMapBt" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace pref="232" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="openSerialMonitorBt" min="-2" pref="36" max="-2" attributes="0"/>
+                  <EmptySpace pref="178" max="32767" attributes="0"/>
                   <Component id="settingsBt" min="-2" pref="36" max="-2" attributes="0"/>
                   <EmptySpace pref="347" max="32767" attributes="0"/>
               </Group>
@@ -69,6 +72,11 @@
         <Component class="javax.swing.JButton" name="settingsBt">
           <Properties>
             <Property name="text" type="java.lang.String" value="Op&#xe7;&#xf5;es"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="openSerialMonitorBt">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Monitor serial"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -5,7 +5,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
@@ -41,6 +40,7 @@ public class MainForm extends javax.swing.JFrame {
         desktop = new javax.swing.JDesktopPane();
         openMapBt = new javax.swing.JButton();
         settingsBt = new javax.swing.JButton();
+        openSerialMonitorBt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,8 +48,11 @@ public class MainForm extends javax.swing.JFrame {
 
         settingsBt.setText("Opções");
 
+        openSerialMonitorBt.setText("Monitor serial");
+
         desktop.setLayer(openMapBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktop.setLayer(settingsBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop.setLayer(openSerialMonitorBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout desktopLayout = new javax.swing.GroupLayout(desktop);
         desktop.setLayout(desktopLayout);
@@ -59,15 +62,18 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(settingsBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(openMapBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(889, Short.MAX_VALUE))
+                    .addComponent(openMapBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(openSerialMonitorBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(858, Short.MAX_VALUE))
         );
         desktopLayout.setVerticalGroup(
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, desktopLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addComponent(openMapBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(openSerialMonitorBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 178, Short.MAX_VALUE)
                 .addComponent(settingsBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(347, Short.MAX_VALUE))
         );
@@ -88,6 +94,10 @@ public class MainForm extends javax.swing.JFrame {
                 
     public void addOpenMapBtListener(ActionListener al){
         openMapBt.addActionListener(al);
+    }
+    
+    public void addOpenSerialMonitorBtListener(ActionListener al){
+        openSerialMonitorBt.addActionListener(al);
     }
     
     public void addOpenSettingsBtListener(ActionListener al){
@@ -211,6 +221,7 @@ public class MainForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
     private javax.swing.JButton openMapBt;
+    private javax.swing.JButton openSerialMonitorBt;
     private javax.swing.JButton settingsBt;
     // End of variables declaration//GEN-END:variables
 }
