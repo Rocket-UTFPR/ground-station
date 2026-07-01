@@ -1,13 +1,14 @@
 package com.rocket.groundstation.app;
 
+import com.rocket.groundstation.model.SerialData;
 import com.rocket.groundstation.serial.services.DispatchService;
 
 
 public class AppCommons {
     private DispatchService<byte[]> rawDataDispatcher;
-    private DispatchService decodedDataDispatcher; // definir tipo se der problema
+    private DispatchService<SerialData> decodedDataDispatcher;
 
-    public AppCommons(DispatchService<byte[]> rawDataDispatcher, DispatchService decodedDataDispatcher) {
+    public AppCommons(DispatchService<byte[]> rawDataDispatcher, DispatchService<SerialData> decodedDataDispatcher) {
         this.rawDataDispatcher = rawDataDispatcher;
         this.decodedDataDispatcher = decodedDataDispatcher;
     }
@@ -16,7 +17,7 @@ public class AppCommons {
         return rawDataDispatcher;
     }
 
-    public DispatchService getDecodedDataDispatcher() {
+    public DispatchService<SerialData> getDecodedDataDispatcher() {
         return decodedDataDispatcher;
     }
     

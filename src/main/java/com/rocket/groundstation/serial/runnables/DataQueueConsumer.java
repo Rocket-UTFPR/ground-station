@@ -2,8 +2,6 @@ package com.rocket.groundstation.serial.runnables;
 
 import com.rocket.groundstation.serial.interfaces.DataDispatcher;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class DataQueueConsumer<T> implements Runnable{    
@@ -21,8 +19,6 @@ public class DataQueueConsumer<T> implements Runnable{
             while(true){
                 dispatcher.dispatch(queue.take());
             }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(DataQueueConsumer.class.getName()).log(Level.SEVERE, null, ex);
-        }              
-    }    
+        } catch(InterruptedException ex){}
+    }
 }

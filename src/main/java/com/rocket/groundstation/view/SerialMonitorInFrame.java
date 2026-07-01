@@ -5,11 +5,16 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.text.DefaultCaret;
 
 
 public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
+    private boolean autoScroll;
     
     public SerialMonitorInFrame() {
+        autoScroll = true;        
         initComponents();
     }
 
@@ -17,8 +22,8 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        SerialSp = new javax.swing.JScrollPane();
-        SerialTa = new javax.swing.JTextArea();
+        serialSp = new javax.swing.JScrollPane();
+        serialTa = new javax.swing.JTextArea();
         portsCb = new javax.swing.JComboBox<>();
         baudCb = new javax.swing.JComboBox<>();
         baudLb = new javax.swing.JLabel();
@@ -52,12 +57,14 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        SerialTa.setColumns(20);
-        SerialTa.setRows(5);
-        SerialTa.setEnabled(false);
-        SerialSp.setViewportView(SerialTa);
+        serialTa.setEditable(false);
+        serialTa.setColumns(20);
+        serialTa.setRows(5);
+        serialTa.setAutoscrolls(false);
+        serialSp.setViewportView(serialTa);
 
         baudCb.setModel(new javax.swing.DefaultComboBoxModel<>(new Integer[] { 9600, 115200 }));
+        baudCb.setSelectedItem(115200);
 
         baudLb.setText("Baud:");
 
@@ -65,6 +72,11 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
 
         clearSerialBt.setText("❌");
         clearSerialBt.setToolTipText("Limpar");
+        clearSerialBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearSerialBtActionPerformed(evt);
+            }
+        });
 
         serialReadTb.setText("Iniciar leitura");
 
@@ -79,7 +91,7 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(SerialSp)
+                    .addComponent(serialSp)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -115,7 +127,7 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
                     .addComponent(serialReadTb)
                     .addComponent(autoScrollTb))
                 .addGap(18, 18, 18)
-                .addComponent(SerialSp, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                .addComponent(serialSp, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -139,11 +151,27 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameClosing
 
+    private void clearSerialBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSerialBtActionPerformed
+        serialTa.setText(null);
+    }//GEN-LAST:event_clearSerialBtActionPerformed
+
     public void appendBytes(byte[] bytes){
         for(byte b : bytes){
-            SerialTa.append(String.valueOf((char) b));
+            serialTa.append(String.valueOf((char) b));
         }        
     }
+    
+    public void toggleAutoScroll(){
+        autoScroll = !autoScroll;
+        
+        DefaultCaret caret = (DefaultCaret) serialTa.getCaret();       
+        
+        if(autoScroll){
+            caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+            serialTa.setCaretPosition(serialTa.getDocument().getLength());
+        }
+        else caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+    }        
     
     public void updatePortsCb(String[] ports){
         portsCb.removeAllItems();
@@ -155,26 +183,41 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
     public String getSelectedPort(){
         return (String) portsCb.getSelectedItem();
     }
-        
-    public void portsCbSetEnabled(boolean enabled){
-        portsCb.setEnabled(enabled);
-    }
-    
+     
     public int getSelectedBaud(){
         return (Integer) baudCb.getSelectedItem();
     }
     
-    public void addPortsCbListener(ItemListener il){
-        portsCb.addItemListener(il);
-    }        
+    public void portsCbSetEnabled(boolean enabled){
+        portsCb.setEnabled(enabled);
+    }                
     
-    public void addSerialReadTbListener(ActionListener al){
-        serialReadTb.addActionListener(al);
-    }        
+    public void showErrorMsg(String msg, String title){        
+        JOptionPane.showMessageDialog(
+           this,
+           msg,
+           title,
+           JOptionPane.ERROR_MESSAGE
+        );
+    }
+    
+    public void addPortsCbListener(PopupMenuListener pml){
+        portsCb.addPopupMenuListener(pml);
+    }
+    
+    public void addSerialReadTbListener(ItemListener il){
+        serialReadTb.addItemListener(il);
+    }
+    
+    public void addAutoScrollTbListener(ActionListener al){
+        autoScrollTb.addActionListener(al);
+    }
+    
+    public void addBaudCbListener(ItemListener il){
+        baudCb.addItemListener(il);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane SerialSp;
-    private javax.swing.JTextArea SerialTa;
     private javax.swing.JToggleButton autoScrollTb;
     private javax.swing.JComboBox<Integer> baudCb;
     private javax.swing.JLabel baudLb;
@@ -182,5 +225,7 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel portLb;
     private javax.swing.JComboBox<String> portsCb;
     private javax.swing.JToggleButton serialReadTb;
+    private javax.swing.JScrollPane serialSp;
+    private javax.swing.JTextArea serialTa;
     // End of variables declaration//GEN-END:variables
 }

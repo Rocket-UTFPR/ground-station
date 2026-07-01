@@ -26,7 +26,7 @@ public class GroundStation {
                 
                 AppCommons appCommons = new AppCommons(
                         new DispatchService<>(),
-                        new DispatchService()
+                        new DispatchService<>()
                 );
                 
                 MainForm mainForm = new MainForm();

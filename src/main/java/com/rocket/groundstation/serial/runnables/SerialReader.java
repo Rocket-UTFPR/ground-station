@@ -38,10 +38,9 @@ public class SerialReader<T> implements Runnable{
                 T decodedData = decoder.add(readBuffer);
                 if(decodedData != null) decodedDataQueue.put(decodedData);
             }
-        }catch(Exception e){
-            System.out.println("exceção do SerialReader");
-            System.out.println(e);
-        }
+        } catch(NegativeArraySizeException ex){ // erro de leitura na porta
+        } catch(InterruptedException ex){} 
+        
         port.closePort();
     }
     
