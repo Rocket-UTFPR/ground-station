@@ -73,22 +73,21 @@ public class SerialMonitorInFrameCtrl {
     private void toggleSerialRead(ItemEvent e){
         if(e.getStateChange() == ItemEvent.SELECTED){
             try{
-                SerialPort port = SerialPort.getCommPort(serialMonitorInFrame.getSelectedPort());
-            
-            
                 srs = new SerialReadService<>(
                         settings.getDecoder(), 
                         appCommons.getRawDataDispatcher(), appCommons.getDecodedDataDispatcher(), 
-                        port, serialMonitorInFrame.getSelectedBaud(), 
+                        SerialPort.getCommPort(serialMonitorInFrame.getSelectedPort()),
+                        serialMonitorInFrame.getSelectedBaud(), 
                         settings.getTimeOutMode(), settings.getReadTimeOut(), settings.getBufferSize()
                 );
-
                 srs.startSerialRead();
                 serialMonitorInFrame.portsCbSetEnabled(false);
             } catch(SerialPortInvalidPortException | IllegalArgumentException ex){
                 serialMonitorInFrame.showErrorMsg("Porta não selecionada", "Erro");
+                serialMonitorInFrame.deselectSerialReadTb();
             } catch(CantOpenPortException ex){
                 serialMonitorInFrame.showErrorMsg("Não se pode abrir a porta selecionada", "Erro");
+                serialMonitorInFrame.deselectSerialReadTb();
             }
         } else{
             if(srs!=null) srs.stopSerialRead();

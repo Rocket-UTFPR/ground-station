@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.awt.graphics.AwtGraphicFactory;
 import org.mapsforge.map.awt.util.AwtUtil;
@@ -22,7 +23,6 @@ public class MapInFrame extends javax.swing.JInternalFrame {
    
     public MapInFrame() {
         initComponents();
-        initMap();
     }
 
     
@@ -123,7 +123,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameClosing
 
-    private void initMap(){
+    public void initMap(){
         
         MapView map = new MapView();
         
@@ -169,7 +169,14 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         mapPanel.repaint();
     }
     
-    
+    public void showErrorMsg(String msg, String title){        
+        JOptionPane.showMessageDialog(
+           this,
+           msg,
+           title,
+           JOptionPane.ERROR_MESSAGE
+        );
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
