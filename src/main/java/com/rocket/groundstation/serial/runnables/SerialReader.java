@@ -33,15 +33,18 @@ public class SerialReader<T> implements Runnable{
                 byte[] readBuffer = new byte[bufferSize];
                 int numRead = port.readBytes(readBuffer, bufferSize);
                 
-                rawDataQueue.put(Arrays.copyOf(readBuffer, numRead));
+                byte[] data = Arrays.copyOf(readBuffer, numRead);
                 
-                T decodedData = decoder.add(readBuffer);
+                rawDataQueue.put(data);
+                
+                T decodedData = decoder.add(data);
                 if(decodedData != null) decodedDataQueue.put(decodedData);
             }
         } catch(NegativeArraySizeException ex){ // erro de leitura na porta
-        } catch(InterruptedException ex){} 
-        
-        port.closePort();
+        } catch(InterruptedException ex){
+        } finally{
+            port.closePort();
+        }
     }
     
 }

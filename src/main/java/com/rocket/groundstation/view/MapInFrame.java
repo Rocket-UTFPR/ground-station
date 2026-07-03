@@ -1,11 +1,8 @@
 package com.rocket.groundstation.view;
 
 import java.awt.BorderLayout;
-import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.awt.graphics.AwtGraphicFactory;
@@ -24,7 +21,6 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     public MapInFrame() {
         initComponents();
     }
-
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -33,32 +29,20 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         splitPanel = new javax.swing.JPanel();
         split = new javax.swing.JSplitPane();
         mapPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        infoSp = new javax.swing.JScrollPane();
+        infoPanel = new javax.swing.JPanel();
+        altLb = new javax.swing.JLabel();
+        altTf = new javax.swing.JTextField();
+        latTf = new javax.swing.JTextField();
+        lonTf = new javax.swing.JTextField();
+        latLb = new javax.swing.JLabel();
+        lonLb = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Mapa");
-        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameClosing(evt);
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameDeiconified(evt);
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameIconified(evt);
-            }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-        });
 
         split.setDividerLocation(700);
         split.setResizeWeight(0.5);
@@ -67,29 +51,77 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGap(0, 713, Short.MAX_VALUE)
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 557, Short.MAX_VALUE)
+            .addGap(0, 555, Short.MAX_VALUE)
         );
 
         split.setLeftComponent(mapPanel);
 
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setHorizontalScrollBar(null);
-        jScrollPane1.setVerifyInputWhenFocusTarget(false);
-        split.setRightComponent(jScrollPane1);
+        infoSp.setBorder(null);
+        infoSp.setHorizontalScrollBar(null);
+        infoSp.setVerifyInputWhenFocusTarget(false);
+
+        altLb.setText("Altitude:");
+
+        altTf.setEditable(false);
+
+        latTf.setEditable(false);
+
+        lonTf.setEditable(false);
+
+        latLb.setText("Latitude:");
+
+        lonLb.setText("Longitude:");
+
+        javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
+        infoPanel.setLayout(infoPanelLayout);
+        infoPanelLayout.setHorizontalGroup(
+            infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(infoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(altLb)
+                    .addComponent(altTf)
+                    .addComponent(latTf)
+                    .addComponent(lonTf)
+                    .addComponent(latLb)
+                    .addComponent(lonLb))
+                .addGap(49, 49, 49))
+        );
+        infoPanelLayout.setVerticalGroup(
+            infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(infoPanelLayout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addComponent(altLb)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(altTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(latLb)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(latTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lonLb)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lonTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(348, Short.MAX_VALUE))
+        );
+
+        infoSp.setViewportView(infoPanel);
+
+        split.setRightComponent(infoSp);
 
         javax.swing.GroupLayout splitPanelLayout = new javax.swing.GroupLayout(splitPanel);
         splitPanel.setLayout(splitPanelLayout);
         splitPanelLayout.setHorizontalGroup(
             splitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(split, javax.swing.GroupLayout.DEFAULT_SIZE, 826, Short.MAX_VALUE)
+            .addComponent(split, javax.swing.GroupLayout.DEFAULT_SIZE, 853, Short.MAX_VALUE)
         );
         splitPanelLayout.setVerticalGroup(
             splitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(split)
+            .addComponent(split, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -106,25 +138,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formInternalFrameIconified(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameIconified
-        this.setMaximizable(false);
-    }//GEN-LAST:event_formInternalFrameIconified
-
-    private void formInternalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameDeiconified
-        this.setMaximizable(true);
-    }//GEN-LAST:event_formInternalFrameDeiconified
-
-    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
-        try {
-            this.setIcon(false);
-            this.setMaximum(false);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(MapInFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_formInternalFrameClosing
-
-    public void initMap(){
-        
+    public void initMap(File mapFile, File cacheDirectory, File renderThemeFile){
         MapView map = new MapView();
         
         mapPanel.setLayout(new BorderLayout());
@@ -134,10 +148,10 @@ public class MapInFrame extends javax.swing.JInternalFrame {
             map.getModel().displayModel.getTileSize(),
             1.0,
             1024,
-            new File("maps/cache")
+            cacheDirectory
         );
         
-        MapDataStore mapDataStore = new MapFile(new File("maps/Brasil-Coast-South_oam.osm.map"));
+        MapDataStore mapDataStore = new MapFile(mapFile);
         
         TileRendererLayer tileRendererLayer = new TileRendererLayer(
                 tileCache,
@@ -148,9 +162,9 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         );
         
         try{
-            tileRendererLayer.setXmlRenderTheme(new ExternalRenderTheme(new File("maps/themes/elevate/Elevate.xml")));
+            tileRendererLayer.setXmlRenderTheme(new ExternalRenderTheme(renderThemeFile));
             map.getModel().displayModel.setUserScaleFactor(1.6f);
-        } catch(FileNotFoundException e){
+        } catch(FileNotFoundException | NullPointerException ex){
             tileRendererLayer.setXmlRenderTheme(MapsforgeThemes.BIKER);
             map.getModel().displayModel.setUserScaleFactor(1.3f);
         }
@@ -169,6 +183,18 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         mapPanel.repaint();
     }
     
+    public void setAltTfText(String txt){
+        altTf.setText(txt);
+    }
+    
+    public void setLatTfText(String txt){
+        latTf.setText(txt);
+    }
+    
+    public void setLonTfText(String txt){
+        lonTf.setText(txt);
+    }
+    
     public void showErrorMsg(String msg, String title){        
         JOptionPane.showMessageDialog(
            this,
@@ -180,7 +206,14 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel altLb;
+    private javax.swing.JTextField altTf;
+    private javax.swing.JPanel infoPanel;
+    private javax.swing.JScrollPane infoSp;
+    private javax.swing.JLabel latLb;
+    private javax.swing.JTextField latTf;
+    private javax.swing.JLabel lonLb;
+    private javax.swing.JTextField lonTf;
     private javax.swing.JPanel mapPanel;
     private javax.swing.JSplitPane split;
     private javax.swing.JPanel splitPanel;

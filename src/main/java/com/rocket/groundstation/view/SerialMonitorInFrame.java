@@ -37,25 +37,6 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Monitor serial");
-        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameClosing(evt);
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameDeiconified(evt);
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameIconified(evt);
-            }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-        });
 
         serialTa.setEditable(false);
         serialTa.setColumns(20);
@@ -133,23 +114,6 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void formInternalFrameIconified(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameIconified
-        this.setMaximizable(false);
-    }//GEN-LAST:event_formInternalFrameIconified
-
-    private void formInternalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameDeiconified
-        this.setMaximizable(true);
-    }//GEN-LAST:event_formInternalFrameDeiconified
-
-    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
-        try {
-            this.setIcon(false);
-            this.setMaximum(false);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(MapInFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_formInternalFrameClosing
 
     private void clearSerialBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSerialBtActionPerformed
         serialTa.setText(null);

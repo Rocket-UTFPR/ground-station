@@ -20,11 +20,11 @@ public class DispatchService<T> implements DataDispatcher<T>{
         oldData = newData;
     }
     
-    public void addSerialDataListener(DataListener<T> sdl){
+    public void addDataListener(DataListener<T> sdl){
         dataListeners.add(sdl);
     }
     
-    public void removeSerialDataListener(DataListener<T> sdl){
+    public void removeDataListener(DataListener<T> sdl){
         dataListeners.remove(sdl);
     }
     

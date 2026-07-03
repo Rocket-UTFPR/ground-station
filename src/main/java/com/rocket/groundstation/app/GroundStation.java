@@ -1,7 +1,6 @@
 package com.rocket.groundstation.app;
 
 import com.rocket.groundstation.controller.MainCtrl;
-import com.rocket.groundstation.model.SerialData;
 import com.rocket.groundstation.model.SettingsModel;
 import com.rocket.groundstation.serial.services.DispatchService;
 import com.rocket.groundstation.view.MainForm;

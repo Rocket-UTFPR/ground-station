@@ -30,25 +30,6 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
         setResizable(true);
         setTitle("Opções");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameClosing(evt);
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameDeiconified(evt);
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameIconified(evt);
-            }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-        });
 
         displayModeLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         displayModeLb.setText("Modo de exibição:");
@@ -76,23 +57,6 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void formInternalFrameIconified(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameIconified
-        this.setMaximizable(false);
-    }//GEN-LAST:event_formInternalFrameIconified
-
-    private void formInternalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameDeiconified
-        this.setMaximizable(true);
-    }//GEN-LAST:event_formInternalFrameDeiconified
-
-    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
-        try {
-            this.setIcon(false);
-            this.setMaximum(false);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(MapInFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_formInternalFrameClosing
 
     public void addDisplayModeCbListener(ItemListener il){
         displayModeCb.addItemListener(il);

@@ -22,7 +22,7 @@ public class MainCtrl {
         this.settings = settings;
         this.appCommons = appCommons;
         
-        addEventListeners();        
+        addListeners();        
     }
 
     public void start() {
@@ -30,7 +30,7 @@ public class MainCtrl {
         
     }
     
-    private void addEventListeners(){
+    private void addListeners(){
         mainForm.addOpenMapBtListener((e)->openMapInFrame());
         mainForm.addOpenSerialMonitorBtListener((e)->openSerialMonitorInFrame());
         mainForm.addOpenSettingsBtListener((e)->openSettingsInFrame());
@@ -40,7 +40,7 @@ public class MainCtrl {
     }
     
     private void openMapInFrame(){
-        if(mapInFrCtrl==null) mapInFrCtrl = new MapInFrameCtrl(new MapInFrame());
+        if(mapInFrCtrl==null) mapInFrCtrl = new MapInFrameCtrl(new MapInFrame(), appCommons);
         
         mainForm.showInFrame(mapInFrCtrl.getMapInFrame());
     }

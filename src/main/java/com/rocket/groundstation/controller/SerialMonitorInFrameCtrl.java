@@ -7,6 +7,7 @@ import com.rocket.groundstation.model.SerialData;
 import com.rocket.groundstation.model.SettingsModel;
 import com.rocket.groundstation.serial.exceptions.CantOpenPortException;
 import com.rocket.groundstation.serial.services.SerialReadService;
+import com.rocket.groundstation.service.InFrameFixer;
 import com.rocket.groundstation.view.SerialMonitorInFrame;
 import java.awt.event.ItemEvent;
 import javax.swing.SwingUtilities;
@@ -26,6 +27,8 @@ public class SerialMonitorInFrameCtrl {
         this.serialMonitorInFrame = serialMonitorInFrame;
         this.settings = settings;
         this.appCommons = appCommons;
+        
+        new InFrameFixer().fix(this.serialMonitorInFrame);
         
         updatePortsCb();
         dispatcherSetup();
@@ -47,7 +50,7 @@ public class SerialMonitorInFrameCtrl {
     }
     
     private void dispatcherSetup(){
-        appCommons.getRawDataDispatcher().addSerialDataListener((oldData, newData)->{
+        appCommons.getRawDataDispatcher().addDataListener((oldData, newData)->{
             SwingUtilities.invokeLater(()->serialMonitorInFrame.appendBytes(newData));
         });
     }
@@ -86,7 +89,7 @@ public class SerialMonitorInFrameCtrl {
                 serialMonitorInFrame.showErrorMsg("Porta não selecionada", "Erro");
                 serialMonitorInFrame.deselectSerialReadTb();
             } catch(CantOpenPortException ex){
-                serialMonitorInFrame.showErrorMsg("Não se pode abrir a porta selecionada", "Erro");
+                serialMonitorInFrame.showErrorMsg("Não se pôde abrir a porta selecionada", "Erro");
                 serialMonitorInFrame.deselectSerialReadTb();
             }
         } else{
