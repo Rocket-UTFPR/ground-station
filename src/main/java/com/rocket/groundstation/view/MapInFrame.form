@@ -41,12 +41,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="split" alignment="0" pref="853" max="32767" attributes="0"/>
+              <Component id="split" alignment="0" pref="972" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="split" alignment="0" pref="555" max="32767" attributes="0"/>
+              <Component id="split" alignment="0" pref="598" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -69,12 +69,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="713" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="798" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="555" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="598" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -88,9 +88,6 @@
                   <ComponentRef name="null"/>
                 </Property>
                 <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
-                <Property name="viewportView" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="default"/>
-                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
@@ -106,16 +103,28 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="altLb" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="altTf" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="latTf" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lonTf" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="latLb" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lonLb" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="altLb" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="altTf" alignment="0" pref="103" max="32767" attributes="0"/>
+                                          <Component id="latTf" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="lonTf" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="latLb" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lonLb" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="trackCb" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="drawCb" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="centerPointCb" alignment="0" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -134,7 +143,13 @@
                               <Component id="lonLb" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="lonTf" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="348" max="32767" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="trackCb" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="centerPointCb" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="drawCb" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="330" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -168,6 +183,21 @@
                     <Component class="javax.swing.JLabel" name="lonLb">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Longitude:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="trackCb">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Seguir"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="drawCb">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Desenhar rota"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="centerPointCb">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Ponto central"/>
                       </Properties>
                     </Component>
                   </SubComponents>

@@ -40,7 +40,7 @@ public class MainCtrl {
     }
     
     private void openMapInFrame(){
-        if(mapInFrCtrl==null) mapInFrCtrl = new MapInFrameCtrl(new MapInFrame(), appCommons);
+        if(mapInFrCtrl==null) mapInFrCtrl = new MapInFrameCtrl(new MapInFrame(), settings, appCommons);
         
         mainForm.showInFrame(mapInFrCtrl.getMapInFrame());
     }

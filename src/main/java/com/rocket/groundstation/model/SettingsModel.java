@@ -4,20 +4,29 @@ import com.rocket.groundstation.service.StandardDecoder;
 import com.rocket.groundstation.serial.interfaces.SerialDataDecoder;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 public class SettingsModel {
-    //-----General settings-----//
+    //-------General settings-------//
     private DisplayMode displayMode;
     
-    //-----Serial settings-----//
+    //-------Serial settings-------//
     private SerialDataDecoder decoder;
     private int bufferSize;
     private int timeOutMode;
     private int readTimeOut;
     
+    //--------Map settings--------//
+    private final String mapDirectory;
+    private final String mapThemesDirectory;
+    private String mapFileName;
+    private String renderThemeSubPath;
+    
     //--------- Misc ---------//
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    
     
     public SettingsModel(){
         displayMode = DisplayMode.WINDOWED;
@@ -26,6 +35,11 @@ public class SettingsModel {
         bufferSize = 64;
         timeOutMode = com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_SEMI_BLOCKING;
         readTimeOut = 0;
+        
+        mapDirectory = "maps";
+        mapThemesDirectory = "maps/themes";
+        mapFileName = "Brasil-Coast-South_oam.osm.map";
+        renderThemeSubPath = "elevate/Elevate.xml";
     }
     
     public void setDisplayMode(Object o){
@@ -60,6 +74,14 @@ public class SettingsModel {
 
     public int getReadTimeOut() {
         return readTimeOut;
+    }
+    
+    public Path getMapPath(){
+        return Paths.get(mapDirectory, mapFileName);
+    }
+    
+    public Path getRenderThemePath(){
+        return Paths.get(mapThemesDirectory, renderThemeSubPath);
     }
     
     public void addPropertyChangeListener(PropertyChangeListener listener) {

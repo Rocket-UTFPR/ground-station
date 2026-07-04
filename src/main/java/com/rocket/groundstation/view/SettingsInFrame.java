@@ -1,9 +1,6 @@
 package com.rocket.groundstation.view;
 
 import java.awt.event.ItemListener;
-import java.beans.PropertyVetoException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 
 
