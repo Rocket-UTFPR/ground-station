@@ -66,7 +66,7 @@ public class MapBuilder {
         );
         
         map.getModel().mapViewPosition.setZoomLevelMin((byte) 6);
-        
+        map.getModel().mapViewPosition.setZoomLevelMax((byte) 25);
         map.getModel().mapViewPosition.setZoomLevel((byte) 10);
         
         return map;

@@ -108,7 +108,7 @@
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="altLb" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="altTf" alignment="0" pref="103" max="32767" attributes="0"/>
+                                          <Component id="altTf" alignment="0" pref="200" max="32767" attributes="0"/>
                                           <Component id="latTf" alignment="0" max="32767" attributes="0"/>
                                           <Component id="lonTf" alignment="0" max="32767" attributes="0"/>
                                           <Component id="latLb" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -116,11 +116,11 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="trackCb" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="drawCb" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="centerPointCb" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="positionMarkerCb" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="drawCb" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="trackCb" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
@@ -144,9 +144,9 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="lonTf" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="trackCb" min="-2" max="-2" attributes="0"/>
+                              <Component id="positionMarkerCb" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="centerPointCb" min="-2" max="-2" attributes="0"/>
+                              <Component id="trackCb" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="drawCb" min="-2" max="-2" attributes="0"/>
                               <EmptySpace pref="330" max="32767" attributes="0"/>
@@ -195,9 +195,9 @@
                         <Property name="text" type="java.lang.String" value="Desenhar rota"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JCheckBox" name="centerPointCb">
+                    <Component class="javax.swing.JCheckBox" name="positionMarkerCb">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Ponto central"/>
+                        <Property name="text" type="java.lang.String" value="Mostrar no mapa"/>
                       </Properties>
                     </Component>
                   </SubComponents>

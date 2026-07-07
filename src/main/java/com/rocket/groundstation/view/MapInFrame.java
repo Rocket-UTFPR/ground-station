@@ -3,15 +3,23 @@ package com.rocket.groundstation.view;
 import java.awt.BorderLayout;
 import java.awt.event.ItemListener;
 import javax.swing.JOptionPane;
+import org.mapsforge.core.graphics.Paint;
+import org.mapsforge.core.graphics.Color;
+import org.mapsforge.core.graphics.GraphicFactory;
+import org.mapsforge.core.graphics.Style;
 import org.mapsforge.core.model.LatLong;
+import org.mapsforge.map.awt.graphics.AwtGraphicFactory;
 import org.mapsforge.map.awt.view.MapView;
+import org.mapsforge.map.layer.overlay.Circle;
 
 
 public class MapInFrame extends javax.swing.JInternalFrame {
     MapView map;
+    Circle circleMarker;
     
     public MapInFrame() {
         initComponents();
+        initDefaults();
     }
     
     public MapView getMap(){
@@ -35,7 +43,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         lonLb = new javax.swing.JLabel();
         trackCb = new javax.swing.JCheckBox();
         drawCb = new javax.swing.JCheckBox();
-        centerPointCb = new javax.swing.JCheckBox();
+        positionMarkerCb = new javax.swing.JCheckBox();
 
         setClosable(true);
         setIconifiable(true);
@@ -79,7 +87,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
 
         drawCb.setText("Desenhar rota");
 
-        centerPointCb.setText("Ponto central");
+        positionMarkerCb.setText("Mostrar no mapa");
 
         javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
         infoPanel.setLayout(infoPanelLayout);
@@ -91,17 +99,17 @@ public class MapInFrame extends javax.swing.JInternalFrame {
                     .addGroup(infoPanelLayout.createSequentialGroup()
                         .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(altLb)
-                            .addComponent(altTf, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                            .addComponent(altTf, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                             .addComponent(latTf)
                             .addComponent(lonTf)
                             .addComponent(latLb)
                             .addComponent(lonLb))
                         .addGap(49, 49, 49))
                     .addGroup(infoPanelLayout.createSequentialGroup()
-                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(trackCb, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(drawCb, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(centerPointCb, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(positionMarkerCb)
+                            .addComponent(drawCb)
+                            .addComponent(trackCb))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         infoPanelLayout.setVerticalGroup(
@@ -120,9 +128,9 @@ public class MapInFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lonTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(trackCb)
+                .addComponent(positionMarkerCb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(centerPointCb)
+                .addComponent(trackCb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(drawCb)
                 .addContainerGap(330, Short.MAX_VALUE))
@@ -156,6 +164,26 @@ public class MapInFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    // <editor-fold defaultstate="collapsed" desc="initDefaults">
+    private void initDefaults(){
+        GraphicFactory gf = AwtGraphicFactory.INSTANCE;
+
+        Paint fill = gf.createPaint();
+        fill.setColor(Color.RED);
+        fill.setStyle(Style.FILL);
+
+        Paint stroke = gf.createPaint();
+        stroke.setColor(Color.BLACK);
+        stroke.setStrokeWidth(1);
+        stroke.setStyle(Style.STROKE);
+        
+        circleMarker = new Circle(
+                new LatLong(0, 0),
+                5, fill, stroke
+        );
+        circleMarker.setVisible(false);
+    }
+    // </editor-fold> 
 
     public void showMap(MapView mapView){
         map = mapView;
@@ -165,6 +193,11 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         
         mapPanel.revalidate();
         mapPanel.repaint();
+        
+        map.getLayerManager().getLayers().add(circleMarker);
+        map.getModel().mapViewPosition.addObserver(()->{
+            circleMarker.setRadius((float) (4 / Math.pow(1.8, map.getModel().mapViewPosition.getZoomLevel() - 18)));
+        });
     }
     
     public void setAltTfText(String txt){
@@ -185,6 +218,15 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         );
     }
     
+    public void setPositionMarkerVisible(boolean visible){
+        circleMarker.setVisible(visible);
+    }
+    
+    public void updatePositionMarker(double lat, double lon){
+        circleMarker.setLatLong(new LatLong(lat, lon));
+        circleMarker.requestRedraw();
+    }
+    
     public void showErrorMsg(String msg, String title){        
         JOptionPane.showMessageDialog(
            this,
@@ -194,6 +236,10 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         );
     }
     
+    public void addPositionMarkerCbListener(ItemListener il){
+        positionMarkerCb.addItemListener(il);
+    }
+    
     public void addTrackCbListener(ItemListener il){
         trackCb.addItemListener(il);
     }
@@ -201,7 +247,6 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel altLb;
     private javax.swing.JTextField altTf;
-    private javax.swing.JCheckBox centerPointCb;
     private javax.swing.JCheckBox drawCb;
     private javax.swing.JPanel infoPanel;
     private javax.swing.JScrollPane infoSp;
@@ -210,6 +255,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lonLb;
     private javax.swing.JTextField lonTf;
     private javax.swing.JPanel mapPanel;
+    private javax.swing.JCheckBox positionMarkerCb;
     private javax.swing.JSplitPane split;
     private javax.swing.JPanel splitPanel;
     private javax.swing.JCheckBox trackCb;

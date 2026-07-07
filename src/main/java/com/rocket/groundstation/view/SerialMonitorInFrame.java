@@ -81,11 +81,13 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(baudCb, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addGap(18, 18, Short.MAX_VALUE)
                                 .addComponent(autoScrollTb)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(clearSerialBt))
-                            .addComponent(portsCb, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(portsCb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(2, 2, 2)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -135,7 +137,7 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
     public void updatePortsCb(String[] ports){
         portsCb.removeAllItems();
         for(String port : ports){
-            portsCb.addItem(port);
+            if(port!=null) portsCb.addItem(port);
         }
     }
     
