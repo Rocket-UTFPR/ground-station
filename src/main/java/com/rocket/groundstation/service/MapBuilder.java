@@ -55,6 +55,7 @@ public class MapBuilder {
             tileRendererLayer.setXmlRenderTheme(new ExternalRenderTheme(renderThemePath.toFile()));
             map.getModel().displayModel.setUserScaleFactor(1.6f);
         } catch(FileNotFoundException | NullPointerException ex){
+            System.out.println("nao");
             tileRendererLayer.setXmlRenderTheme(MapsforgeThemes.BIKER);
             map.getModel().displayModel.setUserScaleFactor(1.3f);
         }

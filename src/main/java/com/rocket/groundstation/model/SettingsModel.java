@@ -38,8 +38,8 @@ public class SettingsModel {
         
         mapDirectory = "maps";
         mapThemesDirectory = "maps/themes";
-        mapFileName = "Brasil-Coast-South_oam.osm.map";
-        renderThemeSubPath = "elevate/Elevate.xml";
+        mapFileName = "brasil.map";
+        renderThemeSubPath = "";
     }
     
     public void setDisplayMode(Object o){

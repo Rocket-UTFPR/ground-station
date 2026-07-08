@@ -45,7 +45,7 @@
                       <Component id="openMapBt" max="32767" attributes="0"/>
                       <Component id="openSerialMonitorBt" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="858" max="32767" attributes="0"/>
+                  <EmptySpace pref="1060" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -56,9 +56,9 @@
                   <Component id="openMapBt" min="-2" pref="36" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="openSerialMonitorBt" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace pref="178" max="32767" attributes="0"/>
+                  <EmptySpace pref="190" max="32767" attributes="0"/>
                   <Component id="settingsBt" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace pref="347" max="32767" attributes="0"/>
+                  <EmptySpace pref="358" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
