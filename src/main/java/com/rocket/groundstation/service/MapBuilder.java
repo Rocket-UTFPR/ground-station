@@ -10,6 +10,12 @@ import org.mapsforge.map.awt.util.AwtUtil;
 import org.mapsforge.map.awt.view.MapView;
 import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.layer.cache.TileCache;
+import org.mapsforge.map.layer.download.TileDownloadLayer;
+import org.mapsforge.map.layer.hills.DemFolder;
+import org.mapsforge.map.layer.hills.DemFolderFS;
+import org.mapsforge.map.layer.hills.DiffuseLightShadingAlgorithm;
+import org.mapsforge.map.layer.hills.HillsRenderConfig;
+import org.mapsforge.map.layer.hills.MemoryCachingHgtReaderTileSource;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.reader.header.MapFileException;
@@ -18,24 +24,20 @@ import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
 
 
 public class MapBuilder {
+    private MapView map;
+    private TileRendererLayer normalLayer;
+    private TileRendererLayer transparentLayer;
+    private TileDownloadLayer satelliteLayer;
     
-    public MapView buildMap(Path mapPath, Path renderThemePath) throws InvalidPathException{
-        if(mapPath==null){
-            throw new InvalidPathException("Map path can't be null", "null");
-        }
+    public MapBuilder(Path mapPath, Path renderThemePath) throws InvalidPathException{
+        if(mapPath==null) throw new InvalidPathException("Map path can't be null", "null");
         
-        MapView map = new MapView();
-        
-        File cacheDirectory = new File("maps/cache");
-        cacheDirectory.mkdir();
-        
-        TileCache tileCache = AwtUtil.createTileCache(
-            map.getModel().displayModel.getTileSize(),
-            1.0,
-            1024,
-            cacheDirectory
-        );
-        
+        map = new MapView();
+        mapSetup(mapPath, renderThemePath);
+    }
+    
+    private void mapSetup(Path mapPath, Path renderThemePath) throws InvalidPathException{
+        new File("maps/cache").mkdirs();
         MapDataStore mapDataStore;
         try{
             mapDataStore = new MapFile(mapPath.toFile());
@@ -43,33 +45,123 @@ public class MapBuilder {
             throw new InvalidPathException("Invalid map path", mapPath.toString());
         }
         
-        TileRendererLayer tileRendererLayer = new TileRendererLayer(
-                tileCache,
+        DemFolder demFolder = new DemFolderFS(new File("maps/hgt"));
+        MemoryCachingHgtReaderTileSource hgtSource = new MemoryCachingHgtReaderTileSource(
+                demFolder,
+                new DiffuseLightShadingAlgorithm(),
+                AwtGraphicFactory.INSTANCE
+        );
+
+        HillsRenderConfig hillsConfig = new HillsRenderConfig(hgtSource);
+        hillsConfig.indexOnThread();
+        
+        mapLayersSetup(mapDataStore, hillsConfig, renderThemePath);
+        satLayerSetup();
+        
+        
+        map.getLayerManager().getLayers().add(normalLayer);
+        map.getLayerManager().getLayers().add(satelliteLayer);
+        map.getLayerManager().getLayers().add(transparentLayer);
+        satelliteLayer.setVisible(false);
+        satelliteLayer.start();
+        satelliteLayer.onPause();
+        transparentLayer.setVisible(false);
+        
+        map.getModel().mapViewPosition.setCenter(
+                new LatLong(-21.938391, -48.950188)
+        );
+        
+        map.getModel().mapViewPosition.setZoomLevelMin((byte) 9);
+        map.getModel().mapViewPosition.setZoomLevelMax((byte) 18);
+        map.getModel().mapViewPosition.setZoomLevel((byte) 10);
+    }
+    
+    private void mapLayersSetup(MapDataStore mapDataStore, HillsRenderConfig hillsConfig, Path renderThemePath){
+        File nlCacheDir = new File("maps/cache/n_cache");
+        nlCacheDir.mkdir();
+        TileCache nlTileCache = AwtUtil.createTileCache(map.getModel().displayModel.getTileSize(),
+            1.0,
+            1024,
+            nlCacheDir
+        );
+        
+        normalLayer = new TileRendererLayer(
+                nlTileCache,
                 mapDataStore,
                 map.getModel().mapViewPosition,
                 false, true, false,
-                AwtGraphicFactory.INSTANCE                
+                AwtGraphicFactory.INSTANCE,
+                hillsConfig
+        );
+        
+        File tlCacheDir = new File("maps/cache/t_cache");
+        tlCacheDir.mkdir();
+        TileCache tlTileCache = AwtUtil.createTileCache(map.getModel().displayModel.getTileSize(),
+            1.0,
+            1024,
+            tlCacheDir
+        );
+        
+        transparentLayer = new TileRendererLayer(
+                tlTileCache,
+                mapDataStore,
+                map.getModel().mapViewPosition,
+                true, true, false,
+                AwtGraphicFactory.INSTANCE,
+                hillsConfig
         );
         
         try{
-            tileRendererLayer.setXmlRenderTheme(new ExternalRenderTheme(renderThemePath.toFile()));
+            normalLayer.setXmlRenderTheme(new ExternalRenderTheme(renderThemePath.toFile()));
             map.getModel().displayModel.setUserScaleFactor(1.6f);
         } catch(FileNotFoundException | NullPointerException ex){
-            System.out.println("nao");
-            tileRendererLayer.setXmlRenderTheme(MapsforgeThemes.BIKER);
+            normalLayer.setXmlRenderTheme(MapsforgeThemes.DEFAULT);
             map.getModel().displayModel.setUserScaleFactor(1.3f);
         }
         
-        map.getLayerManager().getLayers().add(tileRendererLayer);        
+        try {
+            transparentLayer.setXmlRenderTheme(new ExternalRenderTheme(new File("maps/themes/sat.xml")));
+        } catch (FileNotFoundException ex) {
+            transparentLayer.setXmlRenderTheme(MapsforgeThemes.DEFAULT);
+        }
+    }
+    
+    private void satLayerSetup(){
+        File satelliteCacheDirectory = new File("maps/cache/satellite_cache");
+        satelliteCacheDirectory.mkdir();
         
-        map.getModel().mapViewPosition.setCenter(
-                new LatLong(-21.886998, -49.083419)
+        TileCache satelliteCache = AwtUtil.createTileCache(
+                map.getModel().displayModel.getTileSize(),
+                1.0,
+                1024,
+                satelliteCacheDirectory
         );
         
-        map.getModel().mapViewPosition.setZoomLevelMin((byte) 6);
-        map.getModel().mapViewPosition.setZoomLevelMax((byte) 25);
-        map.getModel().mapViewPosition.setZoomLevel((byte) 10);
-        
+        satelliteLayer = new TileDownloadLayer(
+                satelliteCache,
+                map.getModel().mapViewPosition,
+                new EsriSatelliteSource(),
+                AwtGraphicFactory.INSTANCE
+        );
+    }
+    
+    public MapView getMap(){
         return map;
+    }
+    
+    public void addSatLayer(){
+        normalLayer.setVisible(false);
+        
+        satelliteLayer.onResume();
+        satelliteLayer.setVisible(true);
+        transparentLayer.setVisible(true);
+    }
+    
+    public void removeSatLayer(){
+        normalLayer.setVisible(true);
+        
+        satelliteLayer.setVisible(false);
+        transparentLayer.setVisible(false);
+        satelliteLayer.onPause();
     }
 }

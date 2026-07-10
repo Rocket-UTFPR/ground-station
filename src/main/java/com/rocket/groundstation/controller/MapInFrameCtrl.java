@@ -8,7 +8,10 @@ import com.rocket.groundstation.serial.interfaces.DataListener;
 import com.rocket.groundstation.service.InFrameFixer;
 import com.rocket.groundstation.service.MapBuilder;
 import com.rocket.groundstation.view.MapInFrame;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ItemEvent;
+import java.util.Locale;
 import javax.swing.SwingUtilities;
 
 
@@ -16,6 +19,8 @@ public class MapInFrameCtrl {
     private MapInFrame mapInFrame;
     private SettingsModel settings;
     private AppCommons appCommons;
+    private MapBuilder mb;
+    private String latLon;
     private DataListener<SerialData> displayUpdater;
     private DataListener<SerialData> positionMarker;
     private DataListener<SerialData> tracker;
@@ -25,6 +30,7 @@ public class MapInFrameCtrl {
         this.mapInFrame = mapInFrame;
         this.settings = settings;
         this.appCommons = appCommons;
+        this.latLon = "";
         
         new InFrameFixer().fix(this.mapInFrame);
         
@@ -39,10 +45,11 @@ public class MapInFrameCtrl {
         
     private void mapSetup(){
         try{
-            mapInFrame.showMap(new MapBuilder().buildMap(
+            mb = new MapBuilder(
                     settings.getMapPath(),
                     settings.getRenderThemePath()
-            ));
+            ); 
+            mapInFrame.setMap(mb.getMap());
         } catch(InvalidPathException ex){
             mapInFrame.showErrorMsg(
                     "Arquivo não encontrado: " + ex.getPath(), 
@@ -53,10 +60,17 @@ public class MapInFrameCtrl {
     
     private void dataListenersSetup(){
         displayUpdater = (oldData, newData) -> {
+            
+            String lat = String.format(Locale.US, "%.6f", newData.getLatitude());
+            String lon = String.format(Locale.US, "%.6f", newData.getLongitude());
+            latLon = lat + ", " + lon;
+            
             SwingUtilities.invokeLater(()->{
-                mapInFrame.setAltTfText(String.format("%.6f", newData.getAltitude()));
-                mapInFrame.setLatTfText(String.format("%.6f", newData.getLatitude()));
-                mapInFrame.setLonTfText(String.format("%.6f", newData.getLongitude()));
+                mapInFrame.setCoordinatesLbText(
+                        String.format(Locale.US, "%.6f", newData.getAltitude()),
+                        lat,
+                        lon
+                );
             });
         };
         
@@ -81,14 +95,16 @@ public class MapInFrameCtrl {
     
     private void addListeners(){
         appCommons.getDecodedDataDispatcher().addDataListener(displayUpdater);
-        mapInFrame.addTrackCbListener((e)->trackPosition(e));
+        mapInFrame.addCopyBtListener((e)->Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(latLon), null));
         mapInFrame.addPositionMarkerCbListener((e)->markPosition(e));
+        mapInFrame.addTrackCbListener((e)->trackPosition(e));
+        mapInFrame.addSatCbListener((e)->toggleSat(e));
     }
     
     private void markPosition(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
-            mapInFrame.setPositionMarkerVisible(true);
             appCommons.getDecodedDataDispatcher().addDataListener(positionMarker);
+            mapInFrame.setPositionMarkerVisible(true);
         } else{
             mapInFrame.setPositionMarkerVisible(false);
             appCommons.getDecodedDataDispatcher().removeDataListener(positionMarker);
@@ -101,5 +117,10 @@ public class MapInFrameCtrl {
         } else{
             appCommons.getDecodedDataDispatcher().removeDataListener(tracker);
         }
+    }
+    
+    private void toggleSat(ItemEvent e){
+        if(e.getStateChange()==ItemEvent.SELECTED) mb.addSatLayer();
+        else mb.removeSatLayer();
     }
 }

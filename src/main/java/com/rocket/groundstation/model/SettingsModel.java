@@ -32,14 +32,14 @@ public class SettingsModel {
         displayMode = DisplayMode.WINDOWED;
         
         decoder = new StandardDecoder();
-        bufferSize = 64;
-        timeOutMode = com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_SEMI_BLOCKING;
+        bufferSize = 38;
+        timeOutMode = com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_BLOCKING;
         readTimeOut = 0;
         
         mapDirectory = "maps";
         mapThemesDirectory = "maps/themes";
-        mapFileName = "brasil.map";
-        renderThemeSubPath = "";
+        mapFileName = "teste.map";
+        renderThemeSubPath = "Elevate.xml";
     }
     
     public void setDisplayMode(Object o){

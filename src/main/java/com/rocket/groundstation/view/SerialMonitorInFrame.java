@@ -14,7 +14,7 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         autoScroll = true;        
         initComponents();
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
