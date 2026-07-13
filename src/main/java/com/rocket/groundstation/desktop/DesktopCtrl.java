@@ -1,0 +1,54 @@
+package com.rocket.groundstation.desktop;
+
+import com.rocket.groundstation.settings.DisplayMode;
+import com.rocket.groundstation.settings.SettingsModel;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import javax.swing.AbstractAction;
+
+
+public class DesktopCtrl {
+    private final DesktopForm desktopForm;
+    private SettingsModel settings;
+    private DesktopService desktop;
+
+    public DesktopCtrl(DesktopForm desktopForm, SettingsModel settings, DesktopService desktop) {       
+        this.desktopForm = desktopForm;
+        this.settings = settings;
+        this.desktop = desktop;
+        
+        addListeners();        
+    }
+
+    public void start() {
+        desktopForm.setVisible(true);
+    }
+    
+    private void addListeners(){
+        desktopForm.addOpenMapBtListener((e)->desktopForm.showInFrame(desktop.openMapInFrame()));
+        desktopForm.addOpenSerialMonitorBtListener((e)->desktopForm.showInFrame(desktop.openSerialMonitorInFrame()));
+        desktopForm.addOpenSettingsBtListener((e)->desktopForm.showInFrame(desktop.openSettingsInFrame()));
+        desktopForm.addToggleFullscreenAction(desktopToggleDisplayMode());
+        
+        settings.addPropertyChangeListener((e)->settingsChanged(e));
+    }
+    
+    private AbstractAction desktopToggleDisplayMode(){
+        return new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(desktopForm.getDisplayMode()==DisplayMode.WINDOWED) 
+                    settings.setDisplayMode(desktopForm.getOldDisplayMode());
+                else settings.setDisplayMode(DisplayMode.WINDOWED);
+            }
+        };
+    }
+    
+    private void settingsChanged(PropertyChangeEvent e){
+        if(e.getPropertyName().equals("displayMode")) changeDisplayMode(e);
+    }
+    
+    private void changeDisplayMode(PropertyChangeEvent e){
+        if(e.getNewValue()!=null) desktopForm.setDisplayMode((DisplayMode) e.getNewValue());
+    }
+}

@@ -1,23 +1,22 @@
 package com.rocket.groundstation.app;
 
-import com.rocket.groundstation.model.SerialData;
-import com.rocket.groundstation.serial.services.DispatchService;
+import com.rocket.groundstation.serial.core.dispatch.DataDispatchService;
 
 
 public class AppCommons {
-    private DispatchService<byte[]> rawDataDispatcher;
-    private DispatchService<SerialData> decodedDataDispatcher;
+    private DataDispatchService<byte[]> rawDataDispatcher;
+    private DataDispatchService<TelemetryModel> decodedDataDispatcher;
 
-    public AppCommons(DispatchService<byte[]> rawDataDispatcher, DispatchService<SerialData> decodedDataDispatcher) {
+    public AppCommons(DataDispatchService<byte[]> rawDataDispatcher, DataDispatchService<TelemetryModel> decodedDataDispatcher) {
         this.rawDataDispatcher = rawDataDispatcher;
         this.decodedDataDispatcher = decodedDataDispatcher;
     }
 
-    public DispatchService<byte[]> getRawDataDispatcher() {
+    public DataDispatchService<byte[]> getRawDataDispatcher() {
         return rawDataDispatcher;
     }
 
-    public DispatchService<SerialData> getDecodedDataDispatcher() {
+    public DataDispatchService<TelemetryModel> getDecodedDataDispatcher() {
         return decodedDataDispatcher;
     }
     

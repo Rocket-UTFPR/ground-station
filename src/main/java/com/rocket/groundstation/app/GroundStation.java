@@ -1,9 +1,10 @@
 package com.rocket.groundstation.app;
 
-import com.rocket.groundstation.controller.MainCtrl;
-import com.rocket.groundstation.model.SettingsModel;
-import com.rocket.groundstation.serial.services.DispatchService;
-import com.rocket.groundstation.view.MainForm;
+import com.rocket.groundstation.desktop.DesktopCtrl;
+import com.rocket.groundstation.settings.SettingsModel;
+import com.rocket.groundstation.serial.core.dispatch.DataDispatchService;
+import com.rocket.groundstation.desktop.DesktopForm;
+import com.rocket.groundstation.desktop.DesktopService;
 import javax.swing.SwingUtilities;
 
 
@@ -21,16 +22,19 @@ public class GroundStation {
         } catch (Exception ex) {}
         
         SwingUtilities.invokeLater(()->{            
-                SettingsModel settingsModel = new SettingsModel();
+                SettingsModel settings = new SettingsModel();
                 
                 AppCommons appCommons = new AppCommons(
-                        new DispatchService<>(),
-                        new DispatchService<>()
+                        new DataDispatchService<>(),
+                        new DataDispatchService<>()
                 );
                 
-                MainForm mainForm = new MainForm();
+                DesktopForm mainForm = new DesktopForm();
                 
-                MainCtrl mainController = new MainCtrl(mainForm, settingsModel, appCommons);
+                DesktopCtrl mainController = new DesktopCtrl(
+                        mainForm, settings, 
+                        new DesktopService(settings, appCommons)
+                );
                 mainController.start();
         });        
     }
