@@ -138,9 +138,6 @@
         <Property name="text" type="java.lang.String" value="&#x274c;"/>
         <Property name="toolTipText" type="java.lang.String" value="Limpar"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clearSerialBtActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JToggleButton" name="serialReadTb">
       <Properties>

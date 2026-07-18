@@ -1,4 +1,4 @@
-package com.rocket.groundstation.map;
+package com.rocket.groundstation.map.service;
 
 import com.rocket.groundstation.exceptions.InvalidPathException;
 import java.io.File;

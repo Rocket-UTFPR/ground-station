@@ -1,10 +1,14 @@
-package com.rocket.groundstation.map;
+package com.rocket.groundstation.map.controller;
 
-import com.rocket.groundstation.app.AppCommons;
 import com.rocket.groundstation.exceptions.InvalidPathException;
 import com.rocket.groundstation.app.TelemetryModel;
+import com.rocket.groundstation.app.VelocityCalculator;
+import com.rocket.groundstation.map.service.MapBuilder;
+import com.rocket.groundstation.map.view.MapInFrame;
+import com.rocket.groundstation.map.service.TrajectoryManager;
 import com.rocket.groundstation.settings.SettingsModel;
 import com.rocket.groundstation.serial.core.dispatch.DataListener;
+import com.rocket.groundstation.serial.core.read.SerialReadService;
 import com.rocket.groundstation.util.InFrameFixer;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -12,11 +16,14 @@ import java.awt.event.ItemEvent;
 import java.util.Locale;
 import javax.swing.SwingUtilities;
 
+
 public class MapInFrameCtrl {
     private MapInFrame mapInFrame;
     private SettingsModel settings;
-    private AppCommons appCommons;
+    private SerialReadService<TelemetryModel> srs;
+    private TrajectoryManager tm;
     private MapBuilder mb;
+    private VelocityCalculator vc;
     private volatile double lastLatRead;
     private volatile double lastLonRead;
     private DataListener<TelemetryModel> displayUpdater;
@@ -24,12 +31,17 @@ public class MapInFrameCtrl {
     private DataListener<TelemetryModel> tracker;
     private DataListener<TelemetryModel> routeDrawer;
     
-    public MapInFrameCtrl(MapInFrame mapInFrame, SettingsModel settings, AppCommons appCommons){
+    public MapInFrameCtrl(
+            MapInFrame mapInFrame, SettingsModel settings, 
+            SerialReadService<TelemetryModel> srs, TrajectoryManager rs
+    ){
         this.mapInFrame = mapInFrame;
         this.settings = settings;
-        this.appCommons = appCommons;
+        this.srs = srs;
+        this.tm = rs;
         lastLatRead = -21.938391;
         lastLonRead = -48.950188;
+        vc = new VelocityCalculator(settings.getNumberOfDistances());
         
         InFrameFixer.fix(this.mapInFrame);
         
@@ -63,10 +75,14 @@ public class MapInFrameCtrl {
             lastLonRead = newData.getLongitude();
             
             SwingUtilities.invokeLater(()->{
-                mapInFrame.coordinatesLbSetText(
+                vc.addPoint(newData.getAltitude(), newData.getLatitude(), newData.getLongitude(), newData.getUptime());
+                mapInFrame.infoLbSetText(
                         String.format(Locale.US, "%.6f", newData.getAltitude()),
                         String.format(Locale.US, "%.6f", newData.getLatitude()),
-                        String.format(Locale.US, "%.6f", newData.getLongitude())
+                        String.format(Locale.US, "%.6f", newData.getLongitude()),
+                        String.format(Locale.US, "%.2f km/h", vc.getVerticalVelocity()*3.6),
+                        String.format(Locale.US, "%.2f km/h", vc.getHorizontalVelocity()*3.6),
+                        String.format(Locale.US, "%.2f km/h", vc.getResultantVelocity()*3.6)
                 );
             });
         };
@@ -91,21 +107,18 @@ public class MapInFrameCtrl {
         
         routeDrawer = (oldData, newData) -> {
             SwingUtilities.invokeLater(()->{
-                mapInFrame.routeAddPoint(
-                        newData.getLatitude(),
-                        newData.getLongitude() 
-                );
+                tm.trajectoryAddData(newData);
             });
         };
     }
     
     private void addListeners(){
-        appCommons.getDecodedDataDispatcher().addDataListener(displayUpdater);
+        srs.getDecodedDataDispatcher().addDataListener(displayUpdater);
         mapInFrame.addCopyBtListener((e)->copyCoordinatesToClipboard());
         mapInFrame.addPositionMarkerCbListener((e)->markPosition(e));
         mapInFrame.addTrackCbListener((e)->trackPosition(e));
         mapInFrame.addSatCbListener((e)->toggleSat(e));
-        mapInFrame.addRouteTbListener((e)->drawRoute(e));
+        mapInFrame.addTrajectoryTbListener((e)->drawRoute(e));
         mapInFrame.addCenterMapBtActionListener((e)->centerMap());
     }
     
@@ -123,30 +136,32 @@ public class MapInFrameCtrl {
     private void markPosition(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
             mapInFrame.positionMarkerUpdate(lastLatRead, lastLonRead);
-            appCommons.getDecodedDataDispatcher().addDataListener(positionMarker);
+            srs.getDecodedDataDispatcher().addDataListener(positionMarker);
             mapInFrame.positionMarkerSetVisible(true);
         } else{
             mapInFrame.positionMarkerSetVisible(false);
-            appCommons.getDecodedDataDispatcher().removeDataListener(positionMarker);
+            srs.getDecodedDataDispatcher().removeDataListener(positionMarker);
         }
     }
     
     private void trackPosition(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
             mapInFrame.mapSetCenter(lastLatRead, lastLonRead);
-            appCommons.getDecodedDataDispatcher().addDataListener(tracker);
+            srs.getDecodedDataDispatcher().addDataListener(tracker);
         } else{
-            appCommons.getDecodedDataDispatcher().removeDataListener(tracker);
+            srs.getDecodedDataDispatcher().removeDataListener(tracker);
         }
     }
     
     private void drawRoute(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
-            appCommons.getDecodedDataDispatcher().addDataListener(routeDrawer);
-            mapInFrame.routeTbSetText("Finalizar rota");
+            tm.startNewTrajectory(mapInFrame.getMap(), mapInFrame.trajectoryNameTfGetText());
+            srs.getDecodedDataDispatcher().addDataListener(routeDrawer);
+            mapInFrame.trajectoryTbSetText("Finalizar rota");
+            mapInFrame.positionMarkerToFront();
         } else{
-            appCommons.getDecodedDataDispatcher().removeDataListener(routeDrawer);
-            mapInFrame.routeTbSetText("Iniciar nova rota");
+            srs.getDecodedDataDispatcher().removeDataListener(routeDrawer);
+            mapInFrame.trajectoryTbSetText("Iniciar nova rota");
         }
     }
     

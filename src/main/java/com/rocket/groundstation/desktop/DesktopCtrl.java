@@ -10,9 +10,9 @@ import javax.swing.AbstractAction;
 public class DesktopCtrl {
     private final DesktopForm desktopForm;
     private SettingsModel settings;
-    private DesktopService desktop;
+    private DesktopNav desktop;
 
-    public DesktopCtrl(DesktopForm desktopForm, SettingsModel settings, DesktopService desktop) {       
+    public DesktopCtrl(DesktopForm desktopForm, SettingsModel settings, DesktopNav desktop) {       
         this.desktopForm = desktopForm;
         this.settings = settings;
         this.desktop = desktop;

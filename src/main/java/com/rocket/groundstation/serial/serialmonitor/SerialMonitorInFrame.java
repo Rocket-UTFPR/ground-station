@@ -13,6 +13,8 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
     public SerialMonitorInFrame() {
         autoScroll = true;        
         initComponents();
+        
+        clearSerialBt.addActionListener((e)->{serialTa.setText(null);});
     }
     
     @SuppressWarnings("unchecked")
@@ -50,11 +52,6 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
 
         clearSerialBt.setText("❌");
         clearSerialBt.setToolTipText("Limpar");
-        clearSerialBt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearSerialBtActionPerformed(evt);
-            }
-        });
 
         serialReadTb.setText("Iniciar leitura");
 
@@ -111,10 +108,6 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void clearSerialBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSerialBtActionPerformed
-        serialTa.setText(null);
-    }//GEN-LAST:event_clearSerialBtActionPerformed
 
     public void appendBytes(byte[] bytes){
         for(byte b : bytes){

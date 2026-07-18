@@ -1,4 +1,4 @@
-package com.rocket.groundstation.map;
+package com.rocket.groundstation.map.service;
 
 import org.mapsforge.core.model.Tile;
 import org.mapsforge.map.layer.download.tilesource.AbstractTileSource;

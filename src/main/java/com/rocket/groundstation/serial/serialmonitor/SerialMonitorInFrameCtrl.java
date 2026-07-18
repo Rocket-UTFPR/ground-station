@@ -3,7 +3,6 @@ package com.rocket.groundstation.serial.serialmonitor;
 import com.rocket.groundstation.app.TelemetryModel;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
-import com.rocket.groundstation.app.AppCommons;
 import com.rocket.groundstation.settings.SettingsModel;
 import com.rocket.groundstation.serial.core.read.CantOpenPortException;
 import com.rocket.groundstation.serial.core.read.SerialReadService;
@@ -17,15 +16,14 @@ import javax.swing.event.PopupMenuListener;
 public class SerialMonitorInFrameCtrl {
     private SerialMonitorInFrame serialMonitorInFrame;
     private SettingsModel settings;
-    private AppCommons appCommons;
     private SerialReadService<TelemetryModel> srs;
     
     public SerialMonitorInFrameCtrl(SerialMonitorInFrame serialMonitorInFrame,
-            SettingsModel settings, AppCommons appCommons
+            SettingsModel settings, SerialReadService<TelemetryModel> srs
     ){
         this.serialMonitorInFrame = serialMonitorInFrame;
         this.settings = settings;
-        this.appCommons = appCommons;
+        this.srs = srs;
         
         InFrameFixer.fix(this.serialMonitorInFrame);
         
@@ -49,7 +47,7 @@ public class SerialMonitorInFrameCtrl {
     }
     
     private void dispatcherSetup(){
-        appCommons.getRawDataDispatcher().addDataListener((oldData, newData)->{
+        srs.getRawDataDispatcher().addDataListener((oldData, newData)->{
             SwingUtilities.invokeLater(()->serialMonitorInFrame.appendBytes(newData));
         });
     }
@@ -75,13 +73,14 @@ public class SerialMonitorInFrameCtrl {
     private void toggleSerialRead(ItemEvent e){
         if(e.getStateChange() == ItemEvent.SELECTED){
             try{
-                srs = new SerialReadService<>(
-                        appCommons.getRawDataDispatcher(), appCommons.getDecodedDataDispatcher(), 
-                        settings.getDecoder(), 
+                srs.setPort(
                         SerialPort.getCommPort(serialMonitorInFrame.getSelectedPort()),
-                        serialMonitorInFrame.getSelectedBaud(), 
-                        settings.getTimeOutMode(), settings.getReadTimeOut(), settings.getBufferSize()
+                        settings.getTimeOutMode(), settings.getReadTimeOut(),
+                        serialMonitorInFrame.getSelectedBaud()
                 );
+                srs.setBufferSize(settings.getBufferSize());
+                srs.setDecoder(settings.getDecoder());
+                
                 srs.startSerialRead();
                 serialMonitorInFrame.portsCbSetEnabled(false);
             } catch(SerialPortInvalidPortException | IllegalArgumentException ex){
@@ -92,12 +91,12 @@ public class SerialMonitorInFrameCtrl {
                 serialMonitorInFrame.deselectSerialReadTb();
             }
         } else{
-            if(srs!=null) srs.stopSerialRead();
+            srs.stopSerialRead();
             serialMonitorInFrame.portsCbSetEnabled(true);
         }
     }
     
     private void updateBaudRate(){
-        if(srs!=null) srs.setPortBaudRate(serialMonitorInFrame.getSelectedBaud());
+        if(srs!=null) srs.portSetBaudRate(serialMonitorInFrame.getSelectedBaud());
     }
 }

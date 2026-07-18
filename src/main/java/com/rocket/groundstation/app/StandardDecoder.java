@@ -31,7 +31,7 @@ public class StandardDecoder implements SerialDataDecoder<TelemetryModel>{
         String s = data.toString().replace("<", "").replace(">", "");
         String[] values = s.split(";");
         
-        if(values.length!=3){
+        if(values.length!=4){
             return null;
         }
         
@@ -39,7 +39,10 @@ public class StandardDecoder implements SerialDataDecoder<TelemetryModel>{
             return new TelemetryModel(
                     Double.parseDouble(values[0]),
                     Double.parseDouble(values[1]),
-                    Double.parseDouble(values[2])
+                    Double.parseDouble(values[2]),
+                    Long.parseLong(values[3]),
+                    null,
+                    null
             );
         } catch(NumberFormatException ex){
             return null;

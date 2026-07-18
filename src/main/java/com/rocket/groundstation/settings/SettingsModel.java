@@ -23,8 +23,9 @@ public class SettingsModel {
     private final String mapThemesDirectory;
     private String mapFileName;
     private String renderThemeSubPath;
+    private int numberOfDistances;
     
-    //--------- Misc ---------//
+    //---------- Misc ----------//
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     
@@ -40,6 +41,7 @@ public class SettingsModel {
         mapThemesDirectory = "maps/themes";
         mapFileName = "teste.map";
         renderThemeSubPath = "Elevate.xml";
+        numberOfDistances = 2;
     }
     
     public void setDisplayMode(DisplayMode dm){
@@ -75,6 +77,10 @@ public class SettingsModel {
     
     public Path getRenderThemePath(){
         return Paths.get(mapThemesDirectory, renderThemeSubPath);
+    }
+    
+    public int getNumberOfDistances(){
+        return numberOfDistances;
     }
     
     public void addPropertyChangeListener(PropertyChangeListener listener) {

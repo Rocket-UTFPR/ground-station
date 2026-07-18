@@ -44,10 +44,13 @@ public class DesktopForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        openMapBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         openMapBt.setText("Mapa");
 
+        settingsBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         settingsBt.setText("Opções");
 
+        openSerialMonitorBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         openSerialMonitorBt.setText("Monitor serial");
 
         desktop.setLayer(openMapBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -64,7 +67,7 @@ public class DesktopForm extends javax.swing.JFrame {
                     .addComponent(settingsBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(openMapBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(openSerialMonitorBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(1060, Short.MAX_VALUE))
+                .addContainerGap(1048, Short.MAX_VALUE))
         );
         desktopLayout.setVerticalGroup(
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

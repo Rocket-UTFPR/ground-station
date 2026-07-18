@@ -1,8 +1,12 @@
-package com.rocket.groundstation.map;
+package com.rocket.groundstation.map.view;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 import org.mapsforge.core.graphics.Paint;
 import org.mapsforge.core.graphics.Color;
@@ -12,13 +16,12 @@ import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.awt.graphics.AwtGraphicFactory;
 import org.mapsforge.map.awt.view.MapView;
 import org.mapsforge.map.layer.overlay.Circle;
-import org.mapsforge.map.layer.overlay.Polyline;
 
 
 public class MapInFrame extends javax.swing.JInternalFrame {
     MapView map;
     Circle circleMarker;
-    Polyline route;
+    MouseListener ml;
     
     public MapInFrame() {
         initComponents();
@@ -38,7 +41,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         mapPanel = new javax.swing.JPanel();
         infoSp = new javax.swing.JScrollPane();
         infoPanel = new javax.swing.JPanel();
-        coordinatesLb = new javax.swing.JLabel();
+        infoLb = new javax.swing.JLabel();
         trackCb = new javax.swing.JCheckBox();
         positionMarkerCb = new javax.swing.JCheckBox();
         copyBt = new javax.swing.JButton();
@@ -48,8 +51,9 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         latTf = new javax.swing.JTextField();
         lonTf = new javax.swing.JTextField();
         centerMapBt = new javax.swing.JButton();
-        routeNameTf = new javax.swing.JTextField();
-        routeTb = new javax.swing.JToggleButton();
+        trajectoryNameTf = new javax.swing.JTextField();
+        trajectoryTb = new javax.swing.JToggleButton();
+        coordOnClickCb = new javax.swing.JCheckBox();
 
         setClosable(true);
         setIconifiable(true);
@@ -77,8 +81,8 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         infoSp.setHorizontalScrollBar(null);
         infoSp.setVerifyInputWhenFocusTarget(false);
 
-        coordinatesLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        coordinatesLb.setText("Inicie a leitura serial");
+        infoLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        infoLb.setText("Inicie a leitura serial");
 
         trackCb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         trackCb.setText("Seguir");
@@ -105,11 +109,14 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         centerMapBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         centerMapBt.setText("Centralizar");
 
-        routeNameTf.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        routeNameTf.setToolTipText("Nome da rota");
+        trajectoryNameTf.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        trajectoryNameTf.setToolTipText("Nome da rota");
 
-        routeTb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        routeTb.setText("Iniciar nova rota");
+        trajectoryTb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        trajectoryTb.setText("Iniciar trajetória");
+
+        coordOnClickCb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        coordOnClickCb.setText("Mostrar coordenadas com clique");
 
         javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
         infoPanel.setLayout(infoPanelLayout);
@@ -123,23 +130,25 @@ public class MapInFrame extends javax.swing.JInternalFrame {
                     .addComponent(satCb)
                     .addComponent(positionMarkerCb)
                     .addGroup(infoPanelLayout.createSequentialGroup()
-                        .addComponent(routeNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(trajectoryNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(routeTb))
+                        .addComponent(trajectoryTb))
                     .addComponent(latLb)
-                    .addComponent(latTf, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lonLb)
+                    .addComponent(infoLb)
+                    .addComponent(coordOnClickCb)
                     .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(centerMapBt)
-                        .addComponent(lonTf, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lonLb)
-                    .addComponent(coordinatesLb))
+                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lonTf, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                            .addComponent(latTf))))
                 .addGap(0, 93, Short.MAX_VALUE))
         );
         infoPanelLayout.setVerticalGroup(
             infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoPanelLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
-                .addComponent(coordinatesLb)
+                .addComponent(infoLb)
                 .addGap(18, 18, 18)
                 .addComponent(copyBt)
                 .addGap(41, 41, 41)
@@ -150,8 +159,8 @@ public class MapInFrame extends javax.swing.JInternalFrame {
                 .addComponent(satCb)
                 .addGap(41, 41, 41)
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(routeNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(routeTb))
+                    .addComponent(trajectoryNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(trajectoryTb))
                 .addGap(68, 68, 68)
                 .addComponent(latLb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -162,7 +171,9 @@ public class MapInFrame extends javax.swing.JInternalFrame {
                 .addComponent(lonTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(centerMapBt)
-                .addGap(21, 21, 21))
+                .addGap(18, 18, 18)
+                .addComponent(coordOnClickCb)
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         infoSp.setViewportView(infoPanel);
@@ -203,7 +214,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
 
         Paint stroke = gf.createPaint();
         stroke.setColor(Color.BLACK);
-        stroke.setStrokeWidth(1);
+        stroke.setStrokeWidth(2);
         stroke.setStyle(Style.STROKE);
         
         circleMarker = new Circle(
@@ -211,10 +222,19 @@ public class MapInFrame extends javax.swing.JInternalFrame {
                 5, fill, stroke
         );
         circleMarker.setVisible(false);
-        stroke.setStrokeWidth(1.7f);
-        route = new Polyline(
-                stroke, gf
-        );
+        
+        ml = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                LatLong latLong = map.getMapViewProjection().fromPixels(e.getX(), e.getY());
+                latTf.setText(String.format(Locale.US, "%.6f", latLong.getLatitude()));
+                lonTf.setText(String.format(Locale.US, "%.6f", latLong.getLongitude()));
+            }
+            @Override public void mousePressed(MouseEvent e) {}
+            @Override public void mouseReleased(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {}
+            @Override public void mouseExited(MouseEvent e) {}
+        };
     }
     // </editor-fold> 
 
@@ -227,19 +247,28 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         mapPanel.revalidate();
         mapPanel.repaint();
         
-        map.getLayerManager().getLayers().add(route);
         map.getLayerManager().getLayers().add(circleMarker);
         map.getModel().mapViewPosition.addObserver(()->{
-            circleMarker.setRadius((float) (4 / Math.pow(1.8, map.getModel().mapViewPosition.getZoomLevel() - 18)));
+            circleMarker.setRadius((float) (4.4f / Math.pow(1.85, map.getModel().mapViewPosition.getZoomLevel() - 18)));
+        });
+        coordOnClickCb.addItemListener((e)->{
+            if(e.getStateChange()==ItemEvent.SELECTED){
+                map.addMouseListener(ml);
+            } else{
+                map.removeMouseListener(ml);
+            }
         });
     }
     
-    public void coordinatesLbSetText(String alt, String lat, String lon){
-        coordinatesLb.setText(
+    public void infoLbSetText(String alt, String lat, String lon, String vertV, String horV, String resV){
+        infoLb.setText(
                 "<html>"
                         + "Altitude: " + alt + "<br>"
                         + "Latitude: " + lat + "<br>"
-                        + "Longitude: " + lon +
+                        + "Longitude: " + lon + "<br>"
+                        + "Velocidade vertical: " + vertV + "<br>"
+                        + "Velocidade horizontal: " + horV + "<br>"
+                        + "Velocidade resultante: " + resV + 
                 "</html>"
         );
     }
@@ -252,6 +281,12 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     
     public void positionMarkerSetVisible(boolean visible){
         circleMarker.setVisible(visible);
+        positionMarkerToFront();
+    }
+    
+    public void positionMarkerToFront(){
+        map.getLayerManager().getLayers().remove(circleMarker);
+        map.getLayerManager().getLayers().add(circleMarker);
     }
     
     public void positionMarkerUpdate(double lat, double lon){
@@ -259,8 +294,12 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         circleMarker.requestRedraw();
     }
     
-    public void routeTbSetText(String text){
-        routeTb.setText(text);
+    public void trajectoryTbSetText(String text){
+        trajectoryTb.setText(text);
+    }
+    
+    public String trajectoryNameTfGetText(){
+        return trajectoryNameTf.getText();
     }
     
     public String latTfGetText(){
@@ -269,10 +308,6 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     
     public String lonTfGetText(){
         return lonTf.getText();
-    }
-    
-    public void routeAddPoint(double lat, double lon){
-        route.addPoint(new LatLong(lat, lon));
     }
     
     public void showErrorMsg(String msg, String title){        
@@ -300,8 +335,8 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         satCb.addItemListener(il);
     }
     
-    public void addRouteTbListener(ItemListener il){
-        routeTb.addItemListener(il);
+    public void addTrajectoryTbListener(ItemListener il){
+        trajectoryTb.addItemListener(il);
     }
     
     public void addCenterMapBtActionListener(ActionListener al){
@@ -311,8 +346,9 @@ public class MapInFrame extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton centerMapBt;
-    private javax.swing.JLabel coordinatesLb;
+    private javax.swing.JCheckBox coordOnClickCb;
     private javax.swing.JButton copyBt;
+    private javax.swing.JLabel infoLb;
     private javax.swing.JPanel infoPanel;
     private javax.swing.JScrollPane infoSp;
     private javax.swing.JLabel latLb;
@@ -321,11 +357,11 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     private javax.swing.JTextField lonTf;
     private javax.swing.JPanel mapPanel;
     private javax.swing.JCheckBox positionMarkerCb;
-    private javax.swing.JTextField routeNameTf;
-    private javax.swing.JToggleButton routeTb;
     private javax.swing.JCheckBox satCb;
     private javax.swing.JSplitPane split;
     private javax.swing.JPanel splitPanel;
     private javax.swing.JCheckBox trackCb;
+    private javax.swing.JTextField trajectoryNameTf;
+    private javax.swing.JToggleButton trajectoryTb;
     // End of variables declaration//GEN-END:variables
 }
