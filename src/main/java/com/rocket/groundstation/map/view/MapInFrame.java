@@ -1,12 +1,13 @@
 package com.rocket.groundstation.map.view;
 
+import com.rocket.groundstation.util.GpsUtils;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Locale;
 import javax.swing.JOptionPane;
 import org.mapsforge.core.graphics.Paint;
 import org.mapsforge.core.graphics.Color;
@@ -223,17 +224,13 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         );
         circleMarker.setVisible(false);
         
-        ml = new MouseListener() {
+        ml = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 LatLong latLong = map.getMapViewProjection().fromPixels(e.getX(), e.getY());
-                latTf.setText(String.format(Locale.US, "%.6f", latLong.getLatitude()));
-                lonTf.setText(String.format(Locale.US, "%.6f", latLong.getLongitude()));
+                latTf.setText(GpsUtils.format(latLong.getLatitude()));
+                lonTf.setText(GpsUtils.format(latLong.getLongitude()));
             }
-            @Override public void mousePressed(MouseEvent e) {}
-            @Override public void mouseReleased(MouseEvent e) {}
-            @Override public void mouseEntered(MouseEvent e) {}
-            @Override public void mouseExited(MouseEvent e) {}
         };
     }
     // </editor-fold> 
@@ -300,6 +297,10 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     
     public String trajectoryNameTfGetText(){
         return trajectoryNameTf.getText();
+    }
+    
+    public void trajectoryNameTfSetEnabled(boolean enabled){
+        trajectoryNameTf.setEnabled(enabled);
     }
     
     public String latTfGetText(){

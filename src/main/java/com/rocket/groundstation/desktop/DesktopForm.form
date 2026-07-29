@@ -41,9 +41,10 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="settingsBt" max="32767" attributes="0"/>
-                      <Component id="openMapBt" max="32767" attributes="0"/>
+                      <Component id="openLayersBt" max="32767" attributes="0"/>
                       <Component id="openSerialMonitorBt" alignment="0" max="32767" attributes="0"/>
+                      <Component id="openMapBt" alignment="0" max="32767" attributes="0"/>
+                      <Component id="openSettingsBt" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="1048" max="32767" attributes="0"/>
               </Group>
@@ -55,9 +56,11 @@
                   <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
                   <Component id="openMapBt" min="-2" pref="36" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="openLayersBt" min="-2" pref="36" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="openSerialMonitorBt" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace pref="190" max="32767" attributes="0"/>
-                  <Component id="settingsBt" min="-2" pref="36" max="-2" attributes="0"/>
+                  <EmptySpace pref="136" max="32767" attributes="0"/>
+                  <Component id="openSettingsBt" min="-2" pref="36" max="-2" attributes="0"/>
                   <EmptySpace pref="358" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -70,14 +73,16 @@
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Mapa"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="settingsBt">
+        <Component class="javax.swing.JButton" name="openSettingsBt">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Op&#xe7;&#xf5;es"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="openSerialMonitorBt">
@@ -86,6 +91,16 @@
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Monitor serial"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="openLayersBt">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="14" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Marcadores"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
         </Component>
       </SubComponents>

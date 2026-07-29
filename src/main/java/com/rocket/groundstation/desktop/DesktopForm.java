@@ -39,23 +39,32 @@ public class DesktopForm extends javax.swing.JFrame {
 
         desktop = new javax.swing.JDesktopPane();
         openMapBt = new javax.swing.JButton();
-        settingsBt = new javax.swing.JButton();
+        openSettingsBt = new javax.swing.JButton();
         openSerialMonitorBt = new javax.swing.JButton();
+        openLayersBt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         openMapBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         openMapBt.setText("Mapa");
+        openMapBt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        settingsBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        settingsBt.setText("Opções");
+        openSettingsBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        openSettingsBt.setText("Opções");
+        openSettingsBt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         openSerialMonitorBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         openSerialMonitorBt.setText("Monitor serial");
+        openSerialMonitorBt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        openLayersBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        openLayersBt.setText("Marcadores");
+        openLayersBt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         desktop.setLayer(openMapBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        desktop.setLayer(settingsBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop.setLayer(openSettingsBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktop.setLayer(openSerialMonitorBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop.setLayer(openLayersBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout desktopLayout = new javax.swing.GroupLayout(desktop);
         desktop.setLayout(desktopLayout);
@@ -64,9 +73,10 @@ public class DesktopForm extends javax.swing.JFrame {
             .addGroup(desktopLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(settingsBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(openLayersBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(openSerialMonitorBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(openMapBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(openSerialMonitorBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(openSettingsBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(1048, Short.MAX_VALUE))
         );
         desktopLayout.setVerticalGroup(
@@ -75,9 +85,11 @@ public class DesktopForm extends javax.swing.JFrame {
                 .addGap(59, 59, 59)
                 .addComponent(openMapBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(openLayersBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(openSerialMonitorBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
-                .addComponent(settingsBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addComponent(openSettingsBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(358, Short.MAX_VALUE))
         );
 
@@ -99,12 +111,16 @@ public class DesktopForm extends javax.swing.JFrame {
         openMapBt.addActionListener(al);
     }
     
+    public void addOpenLayersBtListener(ActionListener al){
+        openLayersBt.addActionListener(al);
+    }
+    
     public void addOpenSerialMonitorBtListener(ActionListener al){
         openSerialMonitorBt.addActionListener(al);
     }
     
     public void addOpenSettingsBtListener(ActionListener al){
-        settingsBt.addActionListener(al);
+        openSettingsBt.addActionListener(al);
     }
     
     public void addToggleFullscreenAction(Action action) {
@@ -224,8 +240,9 @@ public class DesktopForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
+    private javax.swing.JButton openLayersBt;
     private javax.swing.JButton openMapBt;
     private javax.swing.JButton openSerialMonitorBt;
-    private javax.swing.JButton settingsBt;
+    private javax.swing.JButton openSettingsBt;
     // End of variables declaration//GEN-END:variables
 }

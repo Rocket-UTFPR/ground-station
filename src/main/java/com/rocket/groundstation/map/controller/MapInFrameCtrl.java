@@ -5,10 +5,11 @@ import com.rocket.groundstation.app.TelemetryModel;
 import com.rocket.groundstation.app.VelocityCalculator;
 import com.rocket.groundstation.map.service.MapBuilder;
 import com.rocket.groundstation.map.view.MapInFrame;
-import com.rocket.groundstation.map.service.TrajectoryManager;
+import com.rocket.groundstation.map.service.LayerService;
 import com.rocket.groundstation.settings.SettingsModel;
 import com.rocket.groundstation.serial.core.dispatch.DataListener;
 import com.rocket.groundstation.serial.core.read.SerialReadService;
+import com.rocket.groundstation.util.GpsUtils;
 import com.rocket.groundstation.util.InFrameFixer;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -21,7 +22,7 @@ public class MapInFrameCtrl {
     private MapInFrame mapInFrame;
     private SettingsModel settings;
     private SerialReadService<TelemetryModel> srs;
-    private TrajectoryManager tm;
+    private LayerService ls;
     private MapBuilder mb;
     private VelocityCalculator vc;
     private volatile double lastLatRead;
@@ -33,12 +34,12 @@ public class MapInFrameCtrl {
     
     public MapInFrameCtrl(
             MapInFrame mapInFrame, SettingsModel settings, 
-            SerialReadService<TelemetryModel> srs, TrajectoryManager rs
+            SerialReadService<TelemetryModel> srs, LayerService rs
     ){
         this.mapInFrame = mapInFrame;
         this.settings = settings;
         this.srs = srs;
-        this.tm = rs;
+        this.ls = rs;
         lastLatRead = -21.938391;
         lastLonRead = -48.950188;
         vc = new VelocityCalculator(settings.getNumberOfDistances());
@@ -61,6 +62,7 @@ public class MapInFrameCtrl {
                     settings.getRenderThemePath()
             ); 
             mapInFrame.setMap(mb.getMap());
+            ls.setMap(mapInFrame.getMap());
         } catch(InvalidPathException ex){
             mapInFrame.showErrorMsg(
                     "Arquivo não encontrado: " + ex.getPath(), 
@@ -77,9 +79,9 @@ public class MapInFrameCtrl {
             SwingUtilities.invokeLater(()->{
                 vc.addPoint(newData.getAltitude(), newData.getLatitude(), newData.getLongitude(), newData.getUptime());
                 mapInFrame.infoLbSetText(
-                        String.format(Locale.US, "%.6f", newData.getAltitude()),
-                        String.format(Locale.US, "%.6f", newData.getLatitude()),
-                        String.format(Locale.US, "%.6f", newData.getLongitude()),
+                        GpsUtils.format(newData.getAltitude()),
+                        GpsUtils.format(newData.getLatitude()),
+                        GpsUtils.format(newData.getLongitude()),
                         String.format(Locale.US, "%.2f km/h", vc.getVerticalVelocity()*3.6),
                         String.format(Locale.US, "%.2f km/h", vc.getHorizontalVelocity()*3.6),
                         String.format(Locale.US, "%.2f km/h", vc.getResultantVelocity()*3.6)
@@ -107,7 +109,7 @@ public class MapInFrameCtrl {
         
         routeDrawer = (oldData, newData) -> {
             SwingUtilities.invokeLater(()->{
-                tm.trajectoryAddData(newData);
+                ls.trajectoryAddData(newData);
             });
         };
     }
@@ -125,9 +127,9 @@ public class MapInFrameCtrl {
     private void copyCoordinatesToClipboard(){
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
                 new StringSelection(
-                        String.format(Locale.US, "%.6f", lastLatRead)
+                        GpsUtils.format(lastLatRead)
                         + ", " +
-                        String.format(Locale.US, "%.6f", lastLonRead)
+                        GpsUtils.format(lastLonRead)
                 ), 
                 null
         );
@@ -155,13 +157,16 @@ public class MapInFrameCtrl {
     
     private void drawRoute(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
-            tm.startNewTrajectory(mapInFrame.getMap(), mapInFrame.trajectoryNameTfGetText());
+            ls.startNewTrajectory(mapInFrame.trajectoryNameTfGetText());
             srs.getDecodedDataDispatcher().addDataListener(routeDrawer);
             mapInFrame.trajectoryTbSetText("Finalizar rota");
+            mapInFrame.trajectoryNameTfSetEnabled(false);
             mapInFrame.positionMarkerToFront();
         } else{
+            ls.saveCurrentTrajectory();
             srs.getDecodedDataDispatcher().removeDataListener(routeDrawer);
             mapInFrame.trajectoryTbSetText("Iniciar nova rota");
+            mapInFrame.trajectoryNameTfSetEnabled(true);
         }
     }
     
@@ -172,10 +177,10 @@ public class MapInFrameCtrl {
     
     private void centerMap(){
         try{
-        mapInFrame.mapSetCenter(
-                Double.parseDouble(mapInFrame.latTfGetText()), 
-                Double.parseDouble(mapInFrame.lonTfGetText())
-        );
+            mapInFrame.mapSetCenter(
+                    Double.parseDouble(mapInFrame.latTfGetText()), 
+                    Double.parseDouble(mapInFrame.lonTfGetText())
+            );
         } catch(NumberFormatException ex){
             mapInFrame.showErrorMsg("Use apenas números e ponto", "Formato inválido");
         }

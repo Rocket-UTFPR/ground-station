@@ -1,6 +1,6 @@
 package com.rocket.groundstation.app;
 
-import com.rocket.groundstation.util.GeoCalculator;
+import com.rocket.groundstation.util.GpsUtils;
 
 
 public class VelocityCalculator {
@@ -53,7 +53,7 @@ public class VelocityCalculator {
         double dt = (t2-t1)/1000.0;
         if(dt<=0) return;
         
-        horizontalVelocitiesAvrg += GeoCalculator.haversineDistance(lat1, lon1, lat2, lon2) / dt / numberOfDistances;
+        horizontalVelocitiesAvrg += GpsUtils.haversineDistance(lat1, lon1, lat2, lon2) / dt / numberOfDistances;
         verticalVelocitiesAvrg += (alt2-alt1) / dt / numberOfDistances;
         distanceCount++;
         
