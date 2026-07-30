@@ -78,4 +78,8 @@ public class Marker {
     public void toggleVisibility(){
         circle.setVisible(!circle.isVisible());
     }
+    
+    public void centralize(){
+        if(map!=null) map.setCenter(circle.getPosition());
+    }
 }

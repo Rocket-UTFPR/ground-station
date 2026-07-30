@@ -83,6 +83,9 @@ public class MapBuilder {
     
     private void mapSetup(Path mapPath, Path renderThemePath) throws InvalidPathException{
         new File("maps/cache").mkdirs();
+        new File("maps/themes").mkdirs();
+        new File("maps/hgt").mkdirs();
+        
         MapDataStore mapDataStore;
         try{
             mapDataStore = new MapFile(mapPath.toFile());
@@ -123,7 +126,7 @@ public class MapBuilder {
     
     private void mapLayersSetup(MapDataStore mapDataStore, HillsRenderConfig hillsConfig, Path renderThemePath){
         File nlCacheDir = new File("maps/cache/n_cache");
-        nlCacheDir.mkdir();
+        nlCacheDir.mkdirs();
         TileCache nlTileCache = AwtUtil.createTileCache(map.getModel().displayModel.getTileSize(),
             1.0,
             1024,
@@ -140,7 +143,7 @@ public class MapBuilder {
         );
         
         File tlCacheDir = new File("maps/cache/t_cache");
-        tlCacheDir.mkdir();
+        tlCacheDir.mkdirs();
         TileCache tlTileCache = AwtUtil.createTileCache(map.getModel().displayModel.getTileSize(),
             1.0,
             1024,
@@ -171,7 +174,7 @@ public class MapBuilder {
     
     private void satLayerSetup(){
         File satelliteCacheDirectory = new File("maps/cache/satellite_cache");
-        satelliteCacheDirectory.mkdir();
+        satelliteCacheDirectory.mkdirs();
         
         TileCache satelliteCache = AwtUtil.createTileCache(
                 map.getModel().displayModel.getTileSize(),

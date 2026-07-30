@@ -114,14 +114,17 @@ public class LayersInFrameCtrl {
         return new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(!layersInFrame.markersTableColorCellSelected()) return;
-                
-                Marker marker = layersInFrame.getSelectedMarker();
-                
-                Color newColor = layersInFrame.showColorChooser(marker.getColor());
-                if(newColor!=null){
-                    marker.setColor(newColor);
-                    layersInFrame.updateMarkersTable(ls.getMarkers());
+                if(layersInFrame.markersTableColorCellSelected()){
+                    Marker marker = layersInFrame.getSelectedMarker();
+
+                    Color newColor = layersInFrame.showColorChooser(marker.getColor());
+                    if(newColor!=null){
+                        marker.setColor(newColor);
+                        layersInFrame.updateMarkersTable(ls.getMarkers());
+                    }
+                } else if(layersInFrame.markersTablePositionCellSelected()){
+                    Marker marker = layersInFrame.getSelectedMarker();
+                    marker.centralize();
                 }
             }
         };
@@ -193,7 +196,7 @@ public class LayersInFrameCtrl {
     // </editor-fold>
     
     
-    // <editor-fold defaultstate="collapsed" desc="Tab 1 - Markers">
+    // <editor-fold defaultstate="collapsed" desc="Tab 3 - Details">
     
     // </editor-fold>
 }

@@ -40,9 +40,10 @@ public class StandardDecoder implements SerialDataDecoder<TelemetryModel>{
                     Double.parseDouble(values[0]),
                     Double.parseDouble(values[1]),
                     Double.parseDouble(values[2]),
+                    true, // atualizar quando tiver
                     Long.parseLong(values[3]),
-                    null,
-                    null
+                    null, // atualizar quando tiver
+                    null // atualizar quando tiver
             );
         } catch(NumberFormatException ex){
             return null;

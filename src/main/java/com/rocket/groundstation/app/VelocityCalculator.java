@@ -11,60 +11,44 @@ public class VelocityCalculator {
     private double horizontalVelocitiesAvrg;
     private double verticalVelocitiesAvrg;
     
-    private double lastAlt;
-    private double lastLat;
-    private double lastLon;
+    TelemetryModel lastValidGpsData;
+    TelemetryModel lastData;
     
-    private long lastTime;
-    
-    private int numberOfDistances;
+    private int distanceSample;
     private int distanceCount;
+    private int altSample;
+    private int altCount;
     
     
-    public VelocityCalculator(int numberOfDistances){
-        this(numberOfDistances, 0, 0, 0, 0);
+    public VelocityCalculator(int distanceSample, int altSample){
+        this(distanceSample, altSample, new TelemetryModel());
     }
     
-    public VelocityCalculator(int numberOfDistances, double initialAltitude, double initialLatitude, double initialLongitude, long initialTime){
+    public VelocityCalculator(int distanceSample, int altSample, TelemetryModel initialData){
         horizontalVelocity = 0;
         verticalVelocity = 0;
         resultantVelocity = 0;
-        this.lastAlt = initialAltitude;
-        this.lastLat = initialLatitude;
-        this.lastLon = initialLongitude;
-        this.lastTime = initialTime;
-        this.numberOfDistances = numberOfDistances>0 ? numberOfDistances : 1;
+        this.lastData = initialData;
+        this.lastValidGpsData = initialData;
+        this.distanceSample = distanceSample>0 ? distanceSample : 1;
+        this.altSample = altSample>0 ? altSample : 1;
         distanceCount = 0;
+        altCount = 0;
     }
     
-    public void addPoint(double altitude, double latitude, double longitude, long t){
-        addPoints(lastAlt, lastLat, lastLon, lastTime, altitude, latitude, longitude, t);
+    public void addData(TelemetryModel data){
+        addData(lastData, data);
     }
     
-    public void addPoints(
-            double alt1, double lat1, double lon1, long t1,
-            double alt2, double lat2, double lon2, long t2
-    ){
-        this.lastAlt = alt2;
-        this.lastLat = lat2;
-        this.lastLon = lon2;
-        this.lastTime = t2;
+    public void addData(TelemetryModel data1, TelemetryModel data2){
+        this.lastData = data2;
         
-        double dt = (t2-t1)/1000.0;
-        if(dt<=0) return;
-        
-        horizontalVelocitiesAvrg += GpsUtils.haversineDistance(lat1, lon1, lat2, lon2) / dt / numberOfDistances;
-        verticalVelocitiesAvrg += (alt2-alt1) / dt / numberOfDistances;
-        distanceCount++;
-        
-        if(distanceCount==numberOfDistances){
-            horizontalVelocity = horizontalVelocitiesAvrg;
-            verticalVelocity = verticalVelocitiesAvrg;
-            resultantVelocity = Math.hypot(horizontalVelocitiesAvrg, verticalVelocitiesAvrg);
-            horizontalVelocitiesAvrg = 0;
-            verticalVelocitiesAvrg = 0;
-            distanceCount = 0;
+        if(data2.isNewGpsData()){
+            calcHorizontal(lastValidGpsData, data2);
+            lastValidGpsData = data2;
         }
+        
+        calcVertical(data1, data2);
     }
     
     public double getHorizontalVelocity() {
@@ -80,18 +64,58 @@ public class VelocityCalculator {
     }
 
     public int getNumberOfDistances() {
-        return numberOfDistances;
+        return distanceSample;
     }
     
     public int getDistanceCount() {
         return distanceCount;
     }
     
-    public void setNumberOfDistances(int numberOfDistances){
-        this.numberOfDistances = numberOfDistances>0 ? numberOfDistances : 1;
+    public void setDistanceSample(int distanceSample){
+        this.distanceSample = distanceSample>0 ? distanceSample : 1;
         horizontalVelocitiesAvrg = 0;
-        verticalVelocitiesAvrg = 0;
         resultantVelocity = 0;
         distanceCount = 0;
+    }
+    
+    public void setAltSample(int altSample){
+        this.altSample = altSample>0 ? altSample : 1;
+        verticalVelocitiesAvrg = 0;
+        resultantVelocity = 0;
+        altCount = 0;
+    }
+    
+    private void calcHorizontal(TelemetryModel data1, TelemetryModel data2){
+        double dt = (data2.getUptime()-data1.getUptime())/1000.0;
+        if(dt<=0) return;
+        
+        horizontalVelocitiesAvrg += GpsUtils.haversineDistance(
+                data1.getLatitude(), data1.getLongitude(),
+                data2.getLatitude(), data2.getLongitude()
+        ) / dt / distanceSample;
+        
+        distanceCount++;
+        
+        if(distanceCount==distanceSample){
+            horizontalVelocity = horizontalVelocitiesAvrg;
+            resultantVelocity = Math.hypot(horizontalVelocity, verticalVelocity);
+            horizontalVelocitiesAvrg = 0;
+            distanceCount = 0;
+        }
+    }
+    
+    private void calcVertical(TelemetryModel data1, TelemetryModel data2){
+        double dt = (data2.getUptime()-data1.getUptime())/1000.0;
+        if(dt<=0) return;
+        
+        verticalVelocitiesAvrg += (data2.getAltitude()-data1.getAltitude()) / dt / distanceSample;
+        altCount++;
+        
+        if(altCount==altSample){
+            verticalVelocity = verticalVelocitiesAvrg;
+            resultantVelocity = Math.hypot(horizontalVelocity, verticalVelocity);
+            verticalVelocitiesAvrg = 0;
+            altCount = 0;
+        }
     }
 }

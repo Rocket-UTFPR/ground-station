@@ -42,7 +42,7 @@ public class MapInFrameCtrl {
         this.ls = rs;
         lastLatRead = -21.938391;
         lastLonRead = -48.950188;
-        vc = new VelocityCalculator(settings.getNumberOfDistances());
+        vc = new VelocityCalculator(settings.getDistanceSample(), settings.getAltSample());
         
         InFrameFixer.fix(this.mapInFrame);
         
@@ -77,7 +77,7 @@ public class MapInFrameCtrl {
             lastLonRead = newData.getLongitude();
             
             SwingUtilities.invokeLater(()->{
-                vc.addPoint(newData.getAltitude(), newData.getLatitude(), newData.getLongitude(), newData.getUptime());
+                vc.addData(newData);
                 mapInFrame.infoLbSetText(
                         GpsUtils.format(newData.getAltitude()),
                         GpsUtils.format(newData.getLatitude()),

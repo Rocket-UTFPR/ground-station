@@ -238,6 +238,7 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
         if(markersTable.isEditing()) markersTable.getCellEditor().stopCellEditing();
     }
     
+    // <editor-fold defaultstate="collapsed" desc="Tab 1 - Markers">
     public void updateMarkersTable(List<Marker> markers){
         DefaultTableModel model = (DefaultTableModel) markersTable.getModel();
         model.setRowCount(0);
@@ -266,6 +267,12 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
         return (markersTable.getSelectedColumn()==2 && markersTable.getSelectedRow()>=0);
     }
     
+    public boolean markersTablePositionCellSelected(){
+        return (markersTable.getSelectedColumn()==1 && markersTable.getSelectedRow()>=0);
+    }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Tab 2 - Trajectories">
     public void updateTrajectoryTable(List<Trajectory> trajectories){
         DefaultTableModel model = (DefaultTableModel) trajectoriesTable.getModel();
         model.setRowCount(0);
@@ -291,12 +298,15 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
     public boolean trajTableColorCellSelected(){
         return !(trajectoriesTable.getSelectedColumn()!=1 || trajectoriesTable.getSelectedRow()<0);
     }
+    // </editor-fold>
     
+    // <editor-fold defaultstate="collapsed" desc="Tab 3 - Details">
     public void updateDetailTab(Trajectory t){
         if(t==null) return;
         
         System.out.println("to do");
     }
+    // </editor-fold>
     
     public Color showColorChooser(Color initialColor){
         return JColorChooser.showDialog(
@@ -316,7 +326,7 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
         ) == 0;
     }
     
-    // ---- listeners ---- //
+    // <editor-fold defaultstate="collapsed" desc="Listeners">
     public void addTabPaneListener(ChangeListener cl){
         tabPane.addChangeListener(cl);
     }
@@ -344,6 +354,8 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
     public void addTrajectoriesTableListener(MouseListener ml){
         trajectoriesTable.addMouseListener(ml);
     }
+    // </editor-fold>
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel detailPanel;
