@@ -1,4 +1,4 @@
-PACKAGE com.rocket.groundstation.custom.raven
+License for the PACKAGE com.rocket.groundstation.custom.raven
 
 MIT License
 
