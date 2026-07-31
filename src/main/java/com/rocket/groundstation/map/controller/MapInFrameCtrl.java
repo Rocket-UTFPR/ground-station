@@ -79,7 +79,7 @@ public class MapInFrameCtrl {
             SwingUtilities.invokeLater(()->{
                 vc.addData(newData);
                 mapInFrame.infoLbSetText(
-                        GpsUtils.format(newData.getAltitude()),
+                        String.format(Locale.US, "%.1f m", newData.getAltitude()),
                         GpsUtils.format(newData.getLatitude()),
                         GpsUtils.format(newData.getLongitude()),
                         String.format(Locale.US, "%.2f km/h", vc.getVerticalVelocity()*3.6),

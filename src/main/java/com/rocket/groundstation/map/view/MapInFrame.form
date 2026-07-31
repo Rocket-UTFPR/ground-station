@@ -41,7 +41,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="split" alignment="0" pref="960" max="32767" attributes="0"/>
+              <Component id="split" alignment="0" pref="986" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -54,7 +54,7 @@
         <Container class="javax.swing.JSplitPane" name="split">
           <Properties>
             <Property name="dividerLocation" type="int" value="700"/>
-            <Property name="resizeWeight" type="double" value="0.5"/>
+            <Property name="resizeWeight" type="double" value="1.0"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -69,7 +69,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="651" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="698" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -126,7 +126,7 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace min="0" pref="93" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

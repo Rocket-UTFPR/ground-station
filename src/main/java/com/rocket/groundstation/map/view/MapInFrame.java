@@ -63,13 +63,13 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         setTitle("Mapa");
 
         split.setDividerLocation(700);
-        split.setResizeWeight(0.5);
+        split.setResizeWeight(1.0);
 
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 651, Short.MAX_VALUE)
+            .addGap(0, 698, Short.MAX_VALUE)
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,7 +143,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
                         .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lonTf, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                             .addComponent(latTf))))
-                .addGap(0, 93, Short.MAX_VALUE))
+                .addGap(93, 93, 93))
         );
         infoPanelLayout.setVerticalGroup(
             infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,7 +185,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         splitPanel.setLayout(splitPanelLayout);
         splitPanelLayout.setHorizontalGroup(
             splitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(split, javax.swing.GroupLayout.DEFAULT_SIZE, 960, Short.MAX_VALUE)
+            .addComponent(split, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE)
         );
         splitPanelLayout.setVerticalGroup(
             splitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,6 +207,8 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
     // <editor-fold defaultstate="collapsed" desc="initDefaults">
     private void initDefaults(){
+        infoSp.getVerticalScrollBar().setUnitIncrement(20);
+        
         GraphicFactory gf = AwtGraphicFactory.INSTANCE;
 
         Paint fill = gf.createPaint();
@@ -259,14 +261,14 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     
     public void infoLbSetText(String alt, String lat, String lon, String vertV, String horV, String resV){
         infoLb.setText(
-                "<html>"
-                        + "Altitude: " + alt + "<br>"
-                        + "Latitude: " + lat + "<br>"
-                        + "Longitude: " + lon + "<br>"
-                        + "Velocidade vertical: " + vertV + "<br>"
-                        + "Velocidade horizontal: " + horV + "<br>"
-                        + "Velocidade resultante: " + resV + 
-                "</html>"
+                "<html><table>"
+                        + "<tr><td><b>Altitude:</b></td><td>" + alt + "</td></tr>"
+                        + "<tr><td><b>Latitude:</b></td><td>" + lat + "</td></tr>"
+                        + "<tr><td><b>Longitude:</b></td><td>" + lon + "</td></tr>"
+                        + "<tr><td><b>Velocidade vertical:</b></td><td>" + vertV + "</td></tr>"
+                        + "<tr><td><b>Velocidade horizontal:</b></td><td>" + horV + "</td></tr>"
+                        + "<tr><td><b>Velocidade resultante:</b></td><td>" + resV + "</td></tr>"
+                + "</table></html>"
         );
     }
     
