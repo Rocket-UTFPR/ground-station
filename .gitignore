@@ -28,9 +28,11 @@
 /target/
 /maps/*.map
 /maps/themes/**
-!/maps/themes/.gitkeep
 /maps/cache/**
+/maps/hgt/**
+!/maps/themes/.gitkeep
 !/maps/cache/.gitkeep
+!/maps/hgt/.gitkeep
 
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
