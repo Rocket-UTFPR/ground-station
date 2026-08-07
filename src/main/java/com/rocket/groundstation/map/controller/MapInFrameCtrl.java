@@ -6,9 +6,9 @@ import com.rocket.groundstation.app.VelocityCalculator;
 import com.rocket.groundstation.map.service.MapBuilder;
 import com.rocket.groundstation.map.view.MapInFrame;
 import com.rocket.groundstation.map.service.LayerService;
+import com.rocket.groundstation.serial.core.dispatch.DataDispatcher;
 import com.rocket.groundstation.settings.SettingsModel;
 import com.rocket.groundstation.serial.core.dispatch.DataListener;
-import com.rocket.groundstation.serial.core.read.SerialReadService;
 import com.rocket.groundstation.util.GpsUtils;
 import com.rocket.groundstation.util.InFrameFixer;
 import java.awt.Toolkit;
@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 public class MapInFrameCtrl {
     private MapInFrame mapInFrame;
     private SettingsModel settings;
-    private SerialReadService<TelemetryModel> srs;
+    private DataDispatcher<TelemetryModel> ddd;
     private LayerService ls;
     private MapBuilder mb;
     private VelocityCalculator vc;
@@ -32,13 +32,10 @@ public class MapInFrameCtrl {
     private DataListener<TelemetryModel> tracker;
     private DataListener<TelemetryModel> routeDrawer;
     
-    public MapInFrameCtrl(
-            MapInFrame mapInFrame, SettingsModel settings, 
-            SerialReadService<TelemetryModel> srs, LayerService rs
-    ){
+    public MapInFrameCtrl(MapInFrame mapInFrame, SettingsModel settings, DataDispatcher<TelemetryModel> ddd, LayerService rs){
         this.mapInFrame = mapInFrame;
         this.settings = settings;
-        this.srs = srs;
+        this.ddd = ddd;
         this.ls = rs;
         lastLatRead = -21.938391;
         lastLonRead = -48.950188;
@@ -115,7 +112,7 @@ public class MapInFrameCtrl {
     }
     
     private void addListeners(){
-        srs.getDecodedDataDispatcher().addDataListener(displayUpdater);
+        ddd.addDataListener(displayUpdater);
         mapInFrame.addCopyBtListener((e)->copyCoordinatesToClipboard());
         mapInFrame.addPositionMarkerCbListener((e)->markPosition(e));
         mapInFrame.addTrackCbListener((e)->trackPosition(e));
@@ -138,34 +135,34 @@ public class MapInFrameCtrl {
     private void markPosition(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
             mapInFrame.positionMarkerUpdate(lastLatRead, lastLonRead);
-            srs.getDecodedDataDispatcher().addDataListener(positionMarker);
+            ddd.addDataListener(positionMarker);
             mapInFrame.positionMarkerSetVisible(true);
         } else{
             mapInFrame.positionMarkerSetVisible(false);
-            srs.getDecodedDataDispatcher().removeDataListener(positionMarker);
+            ddd.removeDataListener(positionMarker);
         }
     }
     
     private void trackPosition(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
             mapInFrame.mapSetCenter(lastLatRead, lastLonRead);
-            srs.getDecodedDataDispatcher().addDataListener(tracker);
+            ddd.addDataListener(tracker);
         } else{
-            srs.getDecodedDataDispatcher().removeDataListener(tracker);
+            ddd.removeDataListener(tracker);
         }
     }
     
     private void drawRoute(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
             ls.startNewTrajectory(mapInFrame.trajectoryNameTfGetText());
-            srs.getDecodedDataDispatcher().addDataListener(routeDrawer);
-            mapInFrame.trajectoryTbSetText("Finalizar rota");
+            ddd.addDataListener(routeDrawer);
+            mapInFrame.trajectoryTbSetText("Finalizar trajetória");
             mapInFrame.trajectoryNameTfSetEnabled(false);
             mapInFrame.positionMarkerToFront();
         } else{
             ls.saveCurrentTrajectory();
-            srs.getDecodedDataDispatcher().removeDataListener(routeDrawer);
-            mapInFrame.trajectoryTbSetText("Iniciar nova rota");
+            ddd.removeDataListener(routeDrawer);
+            mapInFrame.trajectoryTbSetText("Iniciar trajetória");
             mapInFrame.trajectoryNameTfSetEnabled(true);
         }
     }

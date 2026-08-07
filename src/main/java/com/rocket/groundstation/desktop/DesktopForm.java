@@ -42,6 +42,7 @@ public class DesktopForm extends javax.swing.JFrame {
         openSettingsBt = new javax.swing.JButton();
         openSerialMonitorBt = new javax.swing.JButton();
         openLayersBt = new javax.swing.JButton();
+        openFileBt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,10 +62,15 @@ public class DesktopForm extends javax.swing.JFrame {
         openLayersBt.setText("Marcadores");
         openLayersBt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        openFileBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        openFileBt.setText("Gravar");
+        openFileBt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
         desktop.setLayer(openMapBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktop.setLayer(openSettingsBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktop.setLayer(openSerialMonitorBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktop.setLayer(openLayersBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop.setLayer(openFileBt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout desktopLayout = new javax.swing.GroupLayout(desktop);
         desktop.setLayout(desktopLayout);
@@ -76,7 +82,8 @@ public class DesktopForm extends javax.swing.JFrame {
                     .addComponent(openLayersBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(openSerialMonitorBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(openMapBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(openSettingsBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(openSettingsBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(openFileBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(1048, Short.MAX_VALUE))
         );
         desktopLayout.setVerticalGroup(
@@ -88,7 +95,9 @@ public class DesktopForm extends javax.swing.JFrame {
                 .addComponent(openLayersBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(openSerialMonitorBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(openFileBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                 .addComponent(openSettingsBt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(358, Short.MAX_VALUE))
         );
@@ -107,30 +116,6 @@ public class DesktopForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
                 
-    public void addOpenMapBtListener(ActionListener al){
-        openMapBt.addActionListener(al);
-    }
-    
-    public void addOpenLayersBtListener(ActionListener al){
-        openLayersBt.addActionListener(al);
-    }
-    
-    public void addOpenSerialMonitorBtListener(ActionListener al){
-        openSerialMonitorBt.addActionListener(al);
-    }
-    
-    public void addOpenSettingsBtListener(ActionListener al){
-        openSettingsBt.addActionListener(al);
-    }
-    
-    public void addToggleFullscreenAction(Action action) {
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0),
-                "toggleFullscreen"
-        );
-        getRootPane().getActionMap().put("toggleFullscreen", action);
-    }
-    
     public void showInFrame(JInternalFrame inFrame){        
         boolean added = false;        
         for(JInternalFrame f : desktop.getAllFrames()){
@@ -203,7 +188,34 @@ public class DesktopForm extends javax.swing.JFrame {
     public DisplayMode getOldDisplayMode(){
         return oldDisplayMode;
     }
-
+    
+    public void addOpenMapBtListener(ActionListener al){
+        openMapBt.addActionListener(al);
+    }
+    
+    public void addOpenLayersBtListener(ActionListener al){
+        openLayersBt.addActionListener(al);
+    }
+    
+    public void addOpenSerialMonitorBtListener(ActionListener al){
+        openSerialMonitorBt.addActionListener(al);
+    }
+    
+    public void addOpenFileBtListener(ActionListener al){
+        openFileBt.addActionListener(al);
+    }
+    
+    public void addOpenSettingsBtListener(ActionListener al){
+        openSettingsBt.addActionListener(al);
+    }
+    
+    public void addToggleFullscreenAction(Action action) {
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0),
+                "toggleFullscreen"
+        );
+        getRootPane().getActionMap().put("toggleFullscreen", action);
+    }
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -240,6 +252,7 @@ public class DesktopForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
+    private javax.swing.JButton openFileBt;
     private javax.swing.JButton openLayersBt;
     private javax.swing.JButton openMapBt;
     private javax.swing.JButton openSerialMonitorBt;

@@ -85,10 +85,8 @@ public class SerialMonitorInFrameCtrl {
                 serialMonitorInFrame.portsCbSetEnabled(false);
             } catch(SerialPortInvalidPortException | IllegalArgumentException ex){
                 serialMonitorInFrame.showErrorMsg("Porta não selecionada", "Erro");
-                serialMonitorInFrame.deselectSerialReadTb();
             } catch(CantOpenPortException ex){
                 serialMonitorInFrame.showErrorMsg("Não se pôde abrir a porta selecionada", "Erro");
-                serialMonitorInFrame.deselectSerialReadTb();
             }
         } else{
             srs.stopSerialRead();

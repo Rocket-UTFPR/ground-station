@@ -45,6 +45,7 @@
                       <Component id="openSerialMonitorBt" alignment="0" max="32767" attributes="0"/>
                       <Component id="openMapBt" alignment="0" max="32767" attributes="0"/>
                       <Component id="openSettingsBt" alignment="0" max="32767" attributes="0"/>
+                      <Component id="openFileBt" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="1048" max="32767" attributes="0"/>
               </Group>
@@ -59,7 +60,9 @@
                   <Component id="openLayersBt" min="-2" pref="36" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="openSerialMonitorBt" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace pref="136" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="openFileBt" min="-2" pref="36" max="-2" attributes="0"/>
+                  <EmptySpace pref="82" max="32767" attributes="0"/>
                   <Component id="openSettingsBt" min="-2" pref="36" max="-2" attributes="0"/>
                   <EmptySpace pref="358" max="32767" attributes="0"/>
               </Group>
@@ -100,6 +103,15 @@
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Marcadores"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="openFileBt">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="14" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Gravar"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
         </Component>

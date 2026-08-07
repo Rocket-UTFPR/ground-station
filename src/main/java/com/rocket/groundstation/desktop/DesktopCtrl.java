@@ -28,6 +28,7 @@ public class DesktopCtrl {
         desktopForm.addOpenMapBtListener((e)->desktopForm.showInFrame(desktop.openMapInFrame()));
         desktopForm.addOpenLayersBtListener((e)->desktopForm.showInFrame(desktop.openLayersInFrame()));
         desktopForm.addOpenSerialMonitorBtListener((e)->desktopForm.showInFrame(desktop.openSerialMonitorInFrame()));
+        desktopForm.addOpenFileBtListener((e)->desktopForm.showInFrame(desktop.openFileInFrame()));
         desktopForm.addOpenSettingsBtListener((e)->desktopForm.showInFrame(desktop.openSettingsInFrame()));
         desktopForm.addToggleFullscreenAction(desktopToggleDisplayMode());
         

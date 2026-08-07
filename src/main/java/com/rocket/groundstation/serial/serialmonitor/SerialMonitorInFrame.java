@@ -142,10 +142,6 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         return (Integer) baudCb.getSelectedItem();
     }
     
-    public void deselectSerialReadTb(){
-        serialReadTb.setSelected(false);
-    }
-    
     public void portsCbSetEnabled(boolean enabled){
         portsCb.setEnabled(enabled);
     }                

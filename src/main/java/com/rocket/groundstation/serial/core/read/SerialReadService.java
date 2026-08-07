@@ -67,6 +67,8 @@ public class SerialReadService<T> {
     }
     
     public void startSerialRead() throws IllegalArgumentException, CantOpenPortException{
+        if(es!=null) if(!es.isShutdown()) return;
+        
         if(port==null) throw new IllegalArgumentException("port can't be null");
         if(rawDataDispatcher==null) throw new IllegalArgumentException("rawDataDispatcher can't be null");
         
@@ -86,6 +88,6 @@ public class SerialReadService<T> {
     }
     
     public void stopSerialRead(){
-        es.shutdownNow();
+        if(es!=null) es.shutdownNow();
     }
 }
