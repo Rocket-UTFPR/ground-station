@@ -21,6 +21,7 @@
 
 # Local
 /build.xml
+/nbactions.xml
 /nbproject/
 /build/
 /local/
