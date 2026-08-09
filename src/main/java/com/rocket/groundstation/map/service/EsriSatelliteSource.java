@@ -5,28 +5,25 @@ import org.mapsforge.map.layer.download.tilesource.AbstractTileSource;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
 public class EsriSatelliteSource extends AbstractTileSource {
 
     public EsriSatelliteSource() {
         super(
-            new String[]{"services.arcgisonline.com"},
-            443
+                new String[]{"services.arcgisonline.com"},
+                443
         );
     }
-
 
     @Override
     public URL getTileUrl(Tile tile) throws MalformedURLException {
 
-        String path =
-                "/ArcGIS/rest/services/World_Imagery/MapServer/tile/"
+        String path
+                = "/ArcGIS/rest/services/World_Imagery/MapServer/tile/"
                 + tile.zoomLevel
                 + "/"
                 + tile.tileY
                 + "/"
                 + tile.tileX;
-
 
         return new URL(
                 "https",
@@ -35,18 +32,15 @@ public class EsriSatelliteSource extends AbstractTileSource {
         );
     }
 
-
     @Override
     public byte getZoomLevelMin() {
         return 1;
     }
 
-
     @Override
     public byte getZoomLevelMax() {
         return 18;
     }
-
 
     @Override
     public boolean hasAlpha() {

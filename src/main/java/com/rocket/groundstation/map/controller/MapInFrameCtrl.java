@@ -14,6 +14,7 @@ import com.rocket.groundstation.util.InFrameFixer;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ItemEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.Locale;
 import javax.swing.SwingUtilities;
 
@@ -31,6 +32,7 @@ public class MapInFrameCtrl {
     private DataListener<TelemetryModel> positionMarker;
     private DataListener<TelemetryModel> tracker;
     private DataListener<TelemetryModel> routeDrawer;
+    private boolean revertingMapChange;
     
     public MapInFrameCtrl(MapInFrame mapInFrame, SettingsModel settings, DataDispatcher<TelemetryModel> ddd, LayerService rs){
         this.mapInFrame = mapInFrame;
@@ -40,6 +42,7 @@ public class MapInFrameCtrl {
         lastLatRead = -21.938391;
         lastLonRead = -48.950188;
         vc = new VelocityCalculator(settings.getDistanceSample(), settings.getAltSample());
+        revertingMapChange = false;
         
         InFrameFixer.fix(this.mapInFrame);
         
@@ -56,13 +59,14 @@ public class MapInFrameCtrl {
         try{
             mb = new MapBuilder(
                     settings.getMapPath(),
-                    settings.getRenderThemePath()
+                    settings.getRenderThemePath(),
+                    settings.getSatRenderThemePath()
             ); 
             mapInFrame.setMap(mb.getMap());
             ls.setMap(mapInFrame.getMap());
         } catch(InvalidPathException ex){
             mapInFrame.showErrorMsg(
-                    "Arquivo não encontrado: " + ex.getPath(), 
+                    "Arquivo inválido: " + ex.getPath(), 
                     "Erro ao carregar o mapa"
             );
         }
@@ -119,6 +123,7 @@ public class MapInFrameCtrl {
         mapInFrame.addSatCbListener((e)->toggleSat(e));
         mapInFrame.addTrajectoryTbListener((e)->drawRoute(e));
         mapInFrame.addCenterMapBtActionListener((e)->centerMap());
+        settings.addPropertyChangeListener((e)->settingsChange(e));
     }
     
     private void copyCoordinatesToClipboard(){
@@ -180,6 +185,24 @@ public class MapInFrameCtrl {
             );
         } catch(NumberFormatException ex){
             mapInFrame.showErrorMsg("Use apenas números e ponto", "Formato inválido");
+        }
+    }
+    
+    private void settingsChange(PropertyChangeEvent e){
+        if(e.getPropertyName().equals("mapPath")){
+            if(mb==null) mapSetup();
+            else if(!revertingMapChange){
+                try{
+                    mb.changeMap(settings.getMapPath());
+                } catch (InvalidPathException ex){
+                    mapInFrame.showErrorMsg(
+                        "Arquivo inválido: " + ex.getPath(), 
+                        "Erro ao carregar o mapa"
+                    );
+                    revertingMapChange = true;
+                    settings.setMapPath(e.getOldValue().toString(), true);
+                }
+            } else revertingMapChange = false;
         }
     }
 }

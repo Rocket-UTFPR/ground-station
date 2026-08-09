@@ -1,7 +1,6 @@
 package com.rocket.groundstation.settings;
 
 import com.rocket.groundstation.util.InFrameFixer;
-import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
 
 
@@ -15,7 +14,9 @@ public class SettingsInFrameCtrl {
         
         InFrameFixer.fix(this.settingsInFrame);
         
-        updateDisplayModeCb(settings.getDisplayMode());
+        restoreGeneralTab();
+        restoreMapTab();
+        restoreSerialTab();
         addListeners();
     }
     
@@ -23,26 +24,40 @@ public class SettingsInFrameCtrl {
         return settingsInFrame;
     }
     
-    private void updateDisplayModeCb(DisplayMode dm){
-        if(null!=dm) switch (dm) {
-            case WINDOWED -> settingsInFrame.setDisplayModeCbSelected(0);
-            case BORDERLESSWINDOW -> settingsInFrame.setDisplayModeCbSelected(1);
-            case FULLSCREEN -> settingsInFrame.setDisplayModeCbSelected(2);
-        }
+    private void restoreGeneralTab(){
+        settingsInFrame.displayModeCbSetDisplayMode(settings.getDisplayMode());
+    }
+    private void restoreMapTab(){
+        settingsInFrame.mapPathTfSetText(settings.getMapPath().toString());
+    }
+    private void restoreSerialTab(){
+        
     }
     
+    
     private void addListeners(){
-        settingsInFrame.addDisplayModeCbListener((il)->changeDisplayMode(il));
+        settingsInFrame.addGeneralApplyBtListener((e)->generalApply());
+        settingsInFrame.addMapApplyBtListener((e)->mapApply());
+        settingsInFrame.addSerialApplyBtListener((e)->serialApply());
+        settingsInFrame.addGeneralRestoreBtListener((e)->restoreGeneralTab());
+        settingsInFrame.addMapRestoreBtListener((e)->restoreMapTab());
+        settingsInFrame.addSerialRestoreBtListener((e)->restoreSerialTab());
         settings.addPropertyChangeListener((e)->settingsChanged(e));
     }
     
-    private void changeDisplayMode(ItemEvent il){
-        DisplayMode dm = DisplayMode.valueOf(il.getItem());
-        if(dm==settings.getDisplayMode() || il.getStateChange()==ItemEvent.DESELECTED) return;
-        settings.setDisplayMode(dm);
+    private void generalApply(){
+        settings.setDisplayMode(settingsInFrame.displayModeCbGetDisplayMode(), true);
+    }
+    
+    private void mapApply(){
+        settings.setMapPath(settingsInFrame.mapPathTfGetText(), true);
+    }
+    
+    private void serialApply(){
+        
     }
     
     private void settingsChanged(PropertyChangeEvent e){
-        if(e.getPropertyName().equals("displayMode")) updateDisplayModeCb((DisplayMode) e.getNewValue());
+        if(e.getPropertyName().equals("displayMode")) settingsInFrame.displayModeCbSetDisplayMode((DisplayMode) e.getNewValue());
     }
 }

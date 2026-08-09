@@ -51,7 +51,7 @@ public class DesktopForm extends javax.swing.JFrame {
         openMapBt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         openSettingsBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        openSettingsBt.setText("Opções");
+        openSettingsBt.setText("Configurações");
         openSettingsBt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         openSerialMonitorBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -84,7 +84,7 @@ public class DesktopForm extends javax.swing.JFrame {
                     .addComponent(openMapBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(openSettingsBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(openFileBt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(1048, Short.MAX_VALUE))
+                .addContainerGap(1044, Short.MAX_VALUE))
         );
         desktopLayout.setVerticalGroup(
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

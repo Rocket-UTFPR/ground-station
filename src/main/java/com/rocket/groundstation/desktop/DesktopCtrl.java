@@ -40,8 +40,8 @@ public class DesktopCtrl {
             @Override
             public void actionPerformed(ActionEvent e){
                 if(desktopForm.getDisplayMode()==DisplayMode.WINDOWED) 
-                    settings.setDisplayMode(desktopForm.getOldDisplayMode());
-                else settings.setDisplayMode(DisplayMode.WINDOWED);
+                    settings.setDisplayMode(desktopForm.getOldDisplayMode(), true);
+                else settings.setDisplayMode(DisplayMode.WINDOWED, true);
             }
         };
     }

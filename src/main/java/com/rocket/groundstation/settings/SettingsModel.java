@@ -19,10 +19,9 @@ public class SettingsModel {
     private int readTimeOut;
     
     //--------Map settings--------//
-    private final String mapDirectory;
-    private final String mapThemesDirectory;
-    private String mapFileName;
-    private String renderThemeSubPath;
+    private String mapPath;
+    private String renderThemePath;
+    private String satRenderThemePath;
     
     //----------Calculator settings----------//
     private int distanceSample;
@@ -40,19 +39,12 @@ public class SettingsModel {
         timeOutMode = com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_BLOCKING;
         readTimeOut = 0;
         
-        mapDirectory = "maps";
-        mapThemesDirectory = "maps/themes";
-        mapFileName = "teste.map";
-        renderThemeSubPath = "Elevate.xml";
+        mapPath = "maps/teste.map";
+        renderThemePath = "maps/themes/Elevate.xml";
+        satRenderThemePath = "maps/themes/sat.xml";
+        
         distanceSample = 2;
         altSample = 2;
-    }
-    
-    public void setDisplayMode(DisplayMode dm){
-        DisplayMode old = displayMode;
-        displayMode = dm;
-    
-        pcs.firePropertyChange("displayMode", old, displayMode);
     }
     
     public DisplayMode getDisplayMode(){
@@ -76,11 +68,15 @@ public class SettingsModel {
     }
     
     public Path getMapPath(){
-        return Paths.get(mapDirectory, mapFileName);
+        return Paths.get(mapPath);
     }
     
     public Path getRenderThemePath(){
-        return Paths.get(mapThemesDirectory, renderThemeSubPath);
+        return Paths.get(renderThemePath);
+    }
+    
+    public Path getSatRenderThemePath(){
+        return Paths.get(satRenderThemePath);
     }
     
     public int getDistanceSample(){
@@ -89,6 +85,22 @@ public class SettingsModel {
     
     public int getAltSample(){
         return altSample;
+    }
+    
+    public void setDisplayMode(DisplayMode dm, boolean checkLastValue){
+        if(checkLastValue && displayMode==dm) return;
+        
+        DisplayMode old = displayMode;
+        displayMode = dm;
+        pcs.firePropertyChange("displayMode", old, displayMode);
+    }
+    
+    public void setMapPath(String mapPath, boolean checkLastValue){
+        if(checkLastValue && mapPath.equals(this.mapPath)) return;
+        
+        String old = this.mapPath;
+        this.mapPath = mapPath;
+        pcs.firePropertyChange("mapPath", old, mapPath);
     }
     
     public void addPropertyChangeListener(PropertyChangeListener listener) {
