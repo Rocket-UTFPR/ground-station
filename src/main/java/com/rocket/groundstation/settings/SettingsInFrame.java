@@ -4,6 +4,7 @@ package com.rocket.groundstation.settings;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 
 public class SettingsInFrame extends javax.swing.JInternalFrame {
@@ -204,6 +205,15 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
     
     public void mapPathTfSetText(String t){
         mapPathTf.setText(t);
+    }
+    
+    public void showErrorMsg(String msg, String title){        
+        JOptionPane.showMessageDialog(
+           this,
+           msg,
+           title,
+           JOptionPane.ERROR_MESSAGE
+        );
     }
     
     public void addGeneralApplyBtListener(ActionListener al){

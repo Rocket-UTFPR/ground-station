@@ -2,6 +2,7 @@ package com.rocket.groundstation.settings;
 
 import com.rocket.groundstation.util.InFrameFixer;
 import java.beans.PropertyChangeEvent;
+import java.io.IOException;
 
 
 public class SettingsInFrameCtrl {
@@ -58,6 +59,12 @@ public class SettingsInFrameCtrl {
     }
     
     private void settingsChanged(PropertyChangeEvent e){
+        try {
+            SettingsService.save(settings);
+        } catch (IOException ex) {
+            settingsInFrame.showErrorMsg(ex.getMessage(), "Erro ao salvar as configurações no arquivo");
+        }
+        
         if(e.getPropertyName().equals("displayMode")) settingsInFrame.displayModeCbSetDisplayMode((DisplayMode) e.getNewValue());
     }
 }
