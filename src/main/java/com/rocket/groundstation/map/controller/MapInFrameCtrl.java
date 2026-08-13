@@ -1,8 +1,8 @@
 package com.rocket.groundstation.map.controller;
 
 import com.rocket.groundstation.exceptions.InvalidPathException;
-import com.rocket.groundstation.app.TelemetryModel;
-import com.rocket.groundstation.app.VelocityCalculator;
+import com.rocket.groundstation.telemetry.TelemetryModel;
+import com.rocket.groundstation.telemetry.VelocityCalculator;
 import com.rocket.groundstation.map.service.MapBuilder;
 import com.rocket.groundstation.map.view.MapInFrame;
 import com.rocket.groundstation.map.service.LayerService;

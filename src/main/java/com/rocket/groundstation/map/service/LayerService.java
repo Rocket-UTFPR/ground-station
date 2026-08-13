@@ -1,6 +1,6 @@
 package com.rocket.groundstation.map.service;
 
-import com.rocket.groundstation.app.TelemetryModel;
+import com.rocket.groundstation.telemetry.TelemetryModel;
 import com.rocket.groundstation.map.model.Marker;
 import com.rocket.groundstation.map.model.Trajectory;
 import java.util.ArrayList;

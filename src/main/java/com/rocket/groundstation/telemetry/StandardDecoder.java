@@ -1,4 +1,4 @@
-package com.rocket.groundstation.app;
+package com.rocket.groundstation.telemetry;
 
 import com.rocket.groundstation.serial.core.consume.SerialDataDecoder;
 

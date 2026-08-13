@@ -27,6 +27,7 @@ public class SettingsInFrameCtrl {
     
     private void restoreGeneralTab(){
         settingsInFrame.displayModeCbSetDisplayMode(settings.getDisplayMode());
+        settingsInFrame.wpPathTfSetText(settings.getWallpaperPath());
     }
     private void restoreMapTab(){
         settingsInFrame.mapPathTfSetText(settings.getMapPath().toString());
@@ -48,6 +49,7 @@ public class SettingsInFrameCtrl {
     
     private void generalApply(){
         settings.setDisplayMode(settingsInFrame.displayModeCbGetDisplayMode(), true);
+        settings.setWallpaperPath(settingsInFrame.wpPathTfGetText(), true);
     }
     
     private void mapApply(){

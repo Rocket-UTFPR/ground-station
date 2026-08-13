@@ -3,7 +3,7 @@ package com.rocket.groundstation.settings;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rocket.groundstation.app.StandardDecoder;
+import com.rocket.groundstation.telemetry.StandardDecoder;
 import com.rocket.groundstation.serial.core.consume.SerialDataDecoder;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 public class SettingsModel {
     //-------General settings-------//
     private DisplayMode displayMode;
+    private String wallpaperPath;
     
     //-------Serial settings-------//
     @JsonIgnore
@@ -59,6 +60,7 @@ public class SettingsModel {
     @JsonCreator
     public SettingsModel(
             @JsonProperty("displayMode") DisplayMode displayMode,
+            @JsonProperty("wallpaperPath") String wallpaperPath,
             @JsonProperty("decoderType") String decoderType,
             @JsonProperty("bufferSize") int bufferSize,
             @JsonProperty("timeOutMode") int timeOutMode,
@@ -71,6 +73,7 @@ public class SettingsModel {
     {
 
         this.displayMode = displayMode;
+        this.wallpaperPath = wallpaperPath;
         this.decoderType = decoderType;
         this.bufferSize = bufferSize;
         this.timeOutMode = timeOutMode;
@@ -86,6 +89,10 @@ public class SettingsModel {
     
     public DisplayMode getDisplayMode(){
         return displayMode;
+    }
+    
+    public String getWallpaperPath(){
+        return wallpaperPath;
     }
 
     public SerialDataDecoder getDecoder() {
@@ -137,6 +144,14 @@ public class SettingsModel {
         DisplayMode old = displayMode;
         displayMode = dm;
         pcs.firePropertyChange("displayMode", old, displayMode);
+    }
+    
+    public void setWallpaperPath(String wallpaperPath, boolean checkLastValue){
+        if(checkLastValue && wallpaperPath.equals(this.wallpaperPath)) return;
+        
+        String old = this.wallpaperPath;
+        this.wallpaperPath = wallpaperPath;
+        pcs.firePropertyChange("wallpaper", old, displayMode);
     }
     
     public void setMapPath(String mapPath, boolean checkLastValue){

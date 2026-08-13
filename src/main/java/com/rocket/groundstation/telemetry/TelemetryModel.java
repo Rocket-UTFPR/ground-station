@@ -1,4 +1,4 @@
-package com.rocket.groundstation.app;
+package com.rocket.groundstation.telemetry;
 
 import java.time.Instant;
 

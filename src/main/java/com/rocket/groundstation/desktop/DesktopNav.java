@@ -1,6 +1,6 @@
 package com.rocket.groundstation.desktop;
 
-import com.rocket.groundstation.app.TelemetryModel;
+import com.rocket.groundstation.telemetry.TelemetryModel;
 import com.rocket.groundstation.file.FileInFrame;
 import com.rocket.groundstation.file.FileInFrameCtrl;
 import com.rocket.groundstation.file.DataFileWriter;

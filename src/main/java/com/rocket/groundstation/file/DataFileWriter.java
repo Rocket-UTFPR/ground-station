@@ -1,6 +1,6 @@
 package com.rocket.groundstation.file;
 
-import com.rocket.groundstation.app.TelemetryModel;
+import com.rocket.groundstation.telemetry.TelemetryModel;
 import com.rocket.groundstation.serial.core.dispatch.DataDispatcher;
 import com.rocket.groundstation.serial.core.dispatch.DataListener;
 import com.rocket.groundstation.util.GpsUtils;

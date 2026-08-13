@@ -1,6 +1,5 @@
 package com.rocket.groundstation.settings;
 
-
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
@@ -24,6 +23,9 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
         displayModeCb = new javax.swing.JComboBox<>();
         generalApplyBt = new javax.swing.JButton();
         generalRestoreBt = new javax.swing.JButton();
+        wpPathLb = new javax.swing.JLabel();
+        wpPathTf = new javax.swing.JTextField();
+        wpPathBt = new javax.swing.JButton();
         mapPanel = new javax.swing.JPanel();
         mapApplyBt = new javax.swing.JButton();
         mapPathBt = new javax.swing.JButton();
@@ -50,21 +52,37 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
         generalRestoreBt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         generalRestoreBt.setText("Restaurar");
 
+        wpPathLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        wpPathLb.setText("Plano de fundo:");
+
+        wpPathBt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        wpPathBt.setText("Procurar");
+
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
         generalPanelLayout.setHorizontalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(displayModeLb)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(displayModeCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(402, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generalPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(generalRestoreBt)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(generalApplyBt)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generalPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(generalRestoreBt)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(generalApplyBt))
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(generalPanelLayout.createSequentialGroup()
+                                .addComponent(displayModeLb)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(displayModeCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(generalPanelLayout.createSequentialGroup()
+                                .addComponent(wpPathLb)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(wpPathTf, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(wpPathBt)))
+                        .addGap(0, 250, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         generalPanelLayout.setVerticalGroup(
@@ -74,7 +92,12 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(displayModeLb)
                     .addComponent(displayModeCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(wpPathBt)
+                    .addComponent(wpPathLb)
+                    .addComponent(wpPathTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 195, Short.MAX_VALUE)
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generalApplyBt)
                     .addComponent(generalRestoreBt))
@@ -87,7 +110,7 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
         mapApplyBt.setText("Aplicar");
 
         mapPathBt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        mapPathBt.setText("Escolher");
+        mapPathBt.setText("Procurar");
 
         mapPathLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         mapPathLb.setText("Mapa:");
@@ -112,7 +135,7 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
                 .addComponent(mapPathTf, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mapPathBt)
-                .addContainerGap(317, Short.MAX_VALUE))
+                .addContainerGap(315, Short.MAX_VALUE))
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,6 +202,12 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
             "Janela", "Janela sem bordas", "Tela cheia"
         }));
         
+        wpPathBt.addActionListener((e)->{
+            JFileChooser jfc = new JFileChooser();
+            if(jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION)
+                wpPathTf.setText(jfc.getSelectedFile().toString());
+        });
+        
         mapPathBt.addActionListener((e)->{
             JFileChooser jfc = new JFileChooser();
             if(jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION)
@@ -187,6 +216,7 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
     }
     // </editor-fold>
     
+    // --------------- general --------------- //
     public DisplayMode displayModeCbGetDisplayMode(){
         return DisplayMode.valueOf(displayModeCb.getSelectedItem());
     }
@@ -199,6 +229,16 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
         }
     }
     
+    public String wpPathTfGetText(){
+        return wpPathTf.getText();
+    }
+    
+    public void wpPathTfSetText(String t){
+        wpPathTf.setText(t);
+    }
+    
+    
+    // --------------- map --------------- //
     public String mapPathTfGetText(){
         return mapPathTf.getText();
     }
@@ -207,6 +247,8 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
         mapPathTf.setText(t);
     }
     
+    
+    // --------------- the rest is history --------------- //
     public void showErrorMsg(String msg, String title){        
         JOptionPane.showMessageDialog(
            this,
@@ -256,5 +298,8 @@ public class SettingsInFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel serialPanel;
     private javax.swing.JButton serialRestoreBt;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JButton wpPathBt;
+    private javax.swing.JLabel wpPathLb;
+    private javax.swing.JTextField wpPathTf;
     // End of variables declaration//GEN-END:variables
 }

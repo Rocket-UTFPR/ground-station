@@ -17,6 +17,8 @@ public class DesktopCtrl {
         this.settings = settings;
         this.desktop = desktop;
         
+        desktopForm.setDisplayMode(settings.getDisplayMode());
+        desktopForm.setBackgroundImage(settings.getWallpaperPath());
         addListeners();        
     }
 
@@ -48,6 +50,9 @@ public class DesktopCtrl {
     
     private void settingsChanged(PropertyChangeEvent e){
         if(e.getPropertyName().equals("displayMode")) changeDisplayMode(e);
+        else if(e.getPropertyName().equals("wallpaper")) try{
+            desktopForm.setBackgroundImage(settings.getWallpaperPath());
+        }catch(Exception ex){}
     }
     
     private void changeDisplayMode(PropertyChangeEvent e){

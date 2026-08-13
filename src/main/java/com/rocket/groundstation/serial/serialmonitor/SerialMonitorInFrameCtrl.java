@@ -1,6 +1,6 @@
 package com.rocket.groundstation.serial.serialmonitor;
 
-import com.rocket.groundstation.app.TelemetryModel;
+import com.rocket.groundstation.telemetry.TelemetryModel;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.rocket.groundstation.settings.SettingsModel;
