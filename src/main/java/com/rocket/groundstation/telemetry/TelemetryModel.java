@@ -8,19 +8,21 @@ public class TelemetryModel {
     private double latitude;
     private double longitude;
     private boolean newGpsData;
+    private boolean ignition;
     private long uptime; // rocket
     private Instant transmissionTime; // rocket
     private Instant receptionTime; // application
     
     public TelemetryModel(){
-        this(0, 0, 0, true, 0, null, null);
+        this(0, 0, 0, true, false, 0, null, null);
     }
     
-    public TelemetryModel(double altitude, double latitude, double longitude, boolean newGpsData, long uptime, Instant transmissionTime, Instant receptionTime) {
+    public TelemetryModel(double altitude, double latitude, double longitude, boolean newGpsData, boolean ignition, long uptime, Instant transmissionTime, Instant receptionTime) {
         this.altitude = altitude;
         this.latitude = latitude;
         this.longitude = longitude;
         this.newGpsData = newGpsData;
+        this.ignition = ignition;
         this.uptime = uptime;
         this.transmissionTime = transmissionTime;
         this.receptionTime = receptionTime;
@@ -40,6 +42,10 @@ public class TelemetryModel {
     
     public boolean isNewGpsData(){
         return newGpsData;
+    }
+    
+    public boolean isIgnition(){
+        return ignition;
     }
     
     public long getUptime(){
@@ -68,6 +74,10 @@ public class TelemetryModel {
     
     public void setNewGpsData(boolean newGpsData){
         this.newGpsData = newGpsData;
+    }
+    
+    public void setIgnition(boolean ignition){
+        this.ignition = ignition;
     }
     
     public void setUptime(long uptime){

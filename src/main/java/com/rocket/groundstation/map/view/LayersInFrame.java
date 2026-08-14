@@ -3,6 +3,8 @@ package com.rocket.groundstation.map.view;
 import com.rocket.groundstation.custom.raven.TableActionEvent;
 import com.rocket.groundstation.map.model.Marker;
 import com.rocket.groundstation.map.model.Trajectory;
+import com.rocket.groundstation.telemetry.TelemetryModel;
+import com.rocket.groundstation.util.GpsUtils;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -37,6 +39,9 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         trajectoriesTable = new javax.swing.JTable();
         detailPanel = new javax.swing.JPanel();
+        trajNameLb = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        detailLb = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -102,7 +107,7 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
             .addGroup(markersPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(markersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 752, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, markersPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(newMarkerBt)))
@@ -112,7 +117,7 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
             markersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(markersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(newMarkerBt)
                 .addGap(14, 14, 14))
@@ -171,29 +176,52 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
             trajectoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, trajectoriesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 752, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
                 .addContainerGap())
         );
         trajectoriesPanelLayout.setVerticalGroup(
             trajectoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(trajectoriesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         tabPane.addTab("Trajetórias", trajectoriesPanel);
 
+        trajNameLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        trajNameLb.setText("Selecione uma trajetória");
+
+        detailLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        detailLb.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        detailLb.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(102, 102, 102)));
+        jScrollPane3.setViewportView(detailLb);
+
         javax.swing.GroupLayout detailPanelLayout = new javax.swing.GroupLayout(detailPanel);
         detailPanel.setLayout(detailPanelLayout);
         detailPanelLayout.setHorizontalGroup(
             detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 764, Short.MAX_VALUE)
+            .addGroup(detailPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addGroup(detailPanelLayout.createSequentialGroup()
+                        .addComponent(trajNameLb)
+                        .addGap(0, 542, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         detailPanelLayout.setVerticalGroup(
             detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 461, Short.MAX_VALUE)
+            .addGroup(detailPanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(trajNameLb)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
+        jScrollPane3.getVerticalScrollBar().setUnitIncrement(20);
+        jScrollPane3.getHorizontalScrollBar().setUnitIncrement(20);
 
         tabPane.addTab("Detalhes", detailPanel);
 
@@ -296,15 +324,91 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
     }
     
     public boolean trajTableColorCellSelected(){
-        return !(trajectoriesTable.getSelectedColumn()!=1 || trajectoriesTable.getSelectedRow()<0);
+        return (trajectoriesTable.getSelectedColumn()==1 && trajectoriesTable.getSelectedRow()>=0);
+    }
+    
+    public boolean trajTableNameCellSelected(){
+        return (trajectoriesTable.getSelectedColumn()==0 && trajectoriesTable.getSelectedRow()>=0);
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Tab 3 - Details">
-    public void updateDetailTab(Trajectory t){
+    public void updateDetailTab(Trajectory t, TelemetryModel launch, TelemetryModel apogee, TelemetryModel impact, double ascentV, double descentV){
         if(t==null) return;
         
-        System.out.println("to do");
+        trajNameLb.setText("Trajetória: " + t.getName());
+        
+        double rtApogee = (apogee.getUptime()-launch.getUptime()) / 1000.0;
+        if(rtApogee<0) rtApogee = 0;
+        double rtImpact = (apogee.getUptime()-launch.getUptime()) / 1000.0;
+        if(rtImpact<0) rtImpact = 0;
+        
+        detailLb.setText(
+            "<html>" +
+            "<div style='margin: 6px 10px;'>" +
+
+            "<table cellpadding='5' cellspacing='0'>" +
+
+            "<tr>" +
+                "<td width='100'></td>" +
+                "<td width='150' align='right'><b>LANÇAMENTO</b></td>" +
+                "<td width='150' align='right'><b>APOGEU</b></td>" +
+                "<td width='150' align='right'><b>IMPACTO</b></td>" +
+            "</tr>" +
+
+            "<tr>" +
+                "<td><b>Altitude</b></td>" +
+                "<td align='right'>" + String.format("%.1f m", launch.getAltitude()) + "</td>" +
+                "<td align='right'>" + String.format("%.1f m", apogee.getAltitude()) + "</td>" +
+                "<td align='right'>" + String.format("%.1f m", impact.getAltitude()) + "</td>" +
+            "</tr>" +
+
+            "<tr>" +
+                "<td><b>Latitude</b></td>" +
+                "<td align='right'>" + GpsUtils.format(launch.getLatitude()) + "</td>" +
+                "<td align='right'>" + GpsUtils.format(apogee.getLatitude()) + "</td>" +
+                "<td align='right'>" + GpsUtils.format(impact.getLatitude()) + "</td>" +
+            "</tr>" +
+
+            "<tr>" +
+                "<td><b>Longitude</b></td>" +
+                "<td align='right'>" + GpsUtils.format(launch.getLongitude()) + "</td>" +
+                "<td align='right'>" + GpsUtils.format(apogee.getLongitude()) + "</td>" +
+                "<td align='right'>" + GpsUtils.format(impact.getLongitude()) + "</td>" +
+            "</tr>" +
+
+            "<tr>" +
+                "<td><b>Uptime</b></td>" +
+                "<td align='right'>" + String.format("%.2f s", launch.getUptime() / 1000.0) + "</td>" +
+                "<td align='right'>" + String.format("%.2f s", apogee.getUptime() / 1000.0) + "</td>" +
+                "<td align='right'>" + String.format("%.2f s", impact.getUptime() / 1000.0) + "</td>" +
+            "</tr>" +
+                        
+            "<tr>" +
+                "<td><b>Tempo relativo</b></td>" +
+                "<td align='right'>" + String.format("%.2f s", 0) + "</td>" +
+                "<td align='right'>" + String.format("%.2f s", rtApogee) + "</td>" +
+                "<td align='right'>" + String.format("%.2f s", rtImpact) + "</td>" +
+            "</tr>" +
+
+            "</table>" +
+
+            "<br><br>" +
+
+            "<table cellpadding='5' cellspacing='0'>" +
+            "<tr>" +
+                "<td width='250'><b>Velocidade média de subida</b></td>" +
+                "<td>" + String.format("%.2f m/s", ascentV) + "</td>" +
+            "</tr>" +
+            "<tr>" +
+                "<td><b>Velocidade média de descida</b></td>" +
+                "<td>" + String.format("%.2f m/s", descentV) + "</td>" +
+            "</tr>" +
+            "</table>" +
+
+            "</div>" +
+            "</html>"
+        );
     }
     // </editor-fold>
     
@@ -324,6 +428,15 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
                 JOptionPane.YES_NO_OPTION,
                 messageType
         ) == 0;
+    }
+    
+    public String showNameInputDialog(){
+        return JOptionPane.showInputDialog(
+                this,
+                "Digite o novo nome:",
+                "Alterar nome",
+                JOptionPane.PLAIN_MESSAGE
+        );
     }
     
     // <editor-fold defaultstate="collapsed" desc="Listeners">
@@ -358,13 +471,16 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel detailLb;
     private javax.swing.JPanel detailPanel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPanel markersPanel;
     private javax.swing.JTable markersTable;
     private javax.swing.JButton newMarkerBt;
     private javax.swing.JTabbedPane tabPane;
+    private javax.swing.JLabel trajNameLb;
     private javax.swing.JPanel trajectoriesPanel;
     private javax.swing.JTable trajectoriesTable;
     // End of variables declaration//GEN-END:variables

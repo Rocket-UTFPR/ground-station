@@ -13,9 +13,6 @@ public class TelemetryAnalyzer {
     private TelemetryModel apogee;
     private TelemetryModel impact;
     
-    private VelocityCalculator vc;
-    
-    
     public TelemetryAnalyzer(List<TelemetryModel> telemetryData){
         this.telemetryData = new ArrayList<>(telemetryData);
     }
@@ -33,20 +30,44 @@ public class TelemetryAnalyzer {
     }
     
     public double getAscentVelocity(){
+        if(apogee==null||launch==null) return 0;
+        
         double dt = (apogee.getUptime()-launch.getUptime())/1000.0;
         if(dt<=0) return 0;
         
         return (apogee.getAltitude()-launch.getAltitude()) / dt;
     }
     
+    public double getDescentVelocity(){
+        if(apogee==null||impact==null) return 0;
+        
+        double dt = (impact.getUptime()-apogee.getUptime())/1000.0;
+        if(dt<=0) return 0;
+        
+        return (apogee.getAltitude()-impact.getAltitude()) / dt;
+    }
+    
     public void setTelemetryData(List<TelemetryModel> telemetryData){
         this.telemetryData = new ArrayList<>(telemetryData);
-        vc = new VelocityCalculator(1, 1);
     }
     
     public void updateValues(){
+        int launchIndex = -1;
+        int i = 0;
+        for(TelemetryModel tm : telemetryData){
+            if(tm.isIgnition()){
+                launchIndex = i;
+                launch = tm;
+                break;
+            }
+            i++;
+        }
+        if(launchIndex==-1) return;
+        
+        telemetryData = telemetryData.subList(launchIndex, telemetryData.size()-1);
+        
         int apogeeIndex = updateApogee();
-        updateLaunch(apogeeIndex);
+        updateImpact(apogeeIndex);
     }
     
     private int updateApogee(){
@@ -61,6 +82,36 @@ public class TelemetryAnalyzer {
             i++;
         }
         return apogeeIndex;
+    }
+    
+    private void updateImpact(int apogeeIndex){
+        int endPointIndex = 0;
+        for(TelemetryModel tm : telemetryData){
+            if(tm.getUptime()-apogee.getUptime()<=300000) break;
+            endPointIndex++;
+        }
+        
+        List<TelemetryModel> points = telemetryData.subList((endPointIndex+apogeeIndex)/2, endPointIndex);
+        
+        WeightedObservedPoints wop = new WeightedObservedPoints();
+        
+        for(TelemetryModel point : points){
+            wop.add(point.getUptime()/1000, point.getAltitude());
+        }
+        
+        PolynomialCurveFitter pcf = PolynomialCurveFitter.create(3);
+        double[] c = pcf.fit(wop.toList());
+        
+        System.out.println(Arrays.toString(c));
+        
+        for(TelemetryModel point : points){
+            double t = point.getUptime()/1000;
+            double velocity = c[1] + 2*c[2]*t + 3*c[3]*t*t;
+            if(velocity<2){
+                impact = point;
+                break;
+            }
+        }
     }
     
     private void updateLaunch(int apogeeIndex){

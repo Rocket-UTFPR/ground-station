@@ -55,7 +55,7 @@
                       <Component id="openSettingsBt" alignment="0" max="32767" attributes="0"/>
                       <Component id="serialMonitorLb" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="1035" max="32767" attributes="0"/>
+                  <EmptySpace pref="1096" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -78,7 +78,7 @@
                   <Component id="openFileBt" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="fileLb" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="68" max="32767" attributes="0"/>
+                  <EmptySpace pref="91" max="32767" attributes="0"/>
                   <Component id="openSettingsBt" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="settingsLb" min="-2" max="-2" attributes="0"/>

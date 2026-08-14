@@ -6,6 +6,8 @@ import com.rocket.groundstation.map.model.Trajectory;
 import com.rocket.groundstation.map.service.LayerService;
 import com.rocket.groundstation.map.view.LayersInFrame;
 import com.rocket.groundstation.map.view.MarkerDialog;
+import com.rocket.groundstation.telemetry.TelemetryAnalyzer;
+import com.rocket.groundstation.telemetry.TelemetryModel;
 import com.rocket.groundstation.util.GpsUtils;
 import com.rocket.groundstation.util.InFrameFixer;
 import java.awt.Color;
@@ -35,17 +37,6 @@ public class LayersInFrameCtrl {
         return layersInFrame;
     }
     
-    private void addListeners(){
-        layersInFrame.addTabPaneListener((e)->tabPane());
-        
-        layersInFrame.addMarkersTableActionBtListener(markersActionBtListener());
-        layersInFrame.addMarkersTableListener(markersMouseListener());
-        layersInFrame.addNewMarkerBtListener((e)->newMarker());
-        
-        layersInFrame.addTrajTableActionBtListener(trajActionBtListener());
-        layersInFrame.addTrajectoriesTableListener(trajMouseListener());
-    }
-    
     private void tabPane(){
         switch(layersInFrame.getTabIndex()){
             case 0 -> {
@@ -57,11 +48,41 @@ public class LayersInFrameCtrl {
             }
             
             case 2 -> {
-                layersInFrame.updateDetailTab(detailTrajectory);
+                updateDetailTab();
             }
             
             default -> {}
         }
+    }
+    
+    private void updateDetailTab(){
+        if(detailTrajectory==null) return;
+        
+        TelemetryAnalyzer ta = new TelemetryAnalyzer(detailTrajectory.getTelemetryData());
+        ta.updateValues();
+        
+        TelemetryModel launch = ta.getLaunch();
+        TelemetryModel apogee = ta.getApogee();
+        TelemetryModel impact = ta.getImpact();
+        
+        if(launch==null) launch = new TelemetryModel();
+        if(apogee==null) apogee = new TelemetryModel();
+        if(impact==null) impact = new TelemetryModel();
+            
+        layersInFrame.updateDetailTab(
+                detailTrajectory, launch, apogee, impact, ta.getAscentVelocity(), ta.getDescentVelocity()
+        );
+    }
+    
+    private void addListeners(){
+        layersInFrame.addTabPaneListener((e)->tabPane());
+        
+        layersInFrame.addMarkersTableActionBtListener(markersActionBtListener());
+        layersInFrame.addMarkersTableListener(markersMouseListener());
+        layersInFrame.addNewMarkerBtListener((e)->newMarker());
+        
+        layersInFrame.addTrajTableActionBtListener(trajActionBtListener());
+        layersInFrame.addTrajectoriesTableListener(trajMouseListener());
     }
     
     // <editor-fold defaultstate="collapsed" desc="Tab 1 - Markers">
@@ -181,22 +202,26 @@ public class LayersInFrameCtrl {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(!layersInFrame.trajTableColorCellSelected()) return;
-                
-                Trajectory trajectory = layersInFrame.getSelectedTrajectory();
-                
-                Color newColor = layersInFrame.showColorChooser(trajectory.getColor());
-                if(newColor!=null){
-                    trajectory.setColor(newColor);
-                    layersInFrame.updateTrajectoryTable(ls.getTrajectories());
+                if(layersInFrame.trajTableColorCellSelected()){
+                    Trajectory trajectory = layersInFrame.getSelectedTrajectory();
+
+                    Color newColor = layersInFrame.showColorChooser(trajectory.getColor());
+                    if(newColor!=null){
+                        trajectory.setColor(newColor);
+                        layersInFrame.updateTrajectoryTable(ls.getTrajectories());
+                    }
+                } else if(layersInFrame.trajTableNameCellSelected()){
+                    Trajectory trajectory = layersInFrame.getSelectedTrajectory();
+                    
+                    String newName = layersInFrame.showNameInputDialog();
+                    
+                    if(newName!=null){
+                        trajectory.setName(newName.trim());
+                        layersInFrame.updateTrajectoryTable(ls.getTrajectories());
+                    }
                 }
             }
         };
     }
-    // </editor-fold>
-    
-    
-    // <editor-fold defaultstate="collapsed" desc="Tab 3 - Details">
-    
     // </editor-fold>
 }

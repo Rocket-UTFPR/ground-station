@@ -31,7 +31,7 @@ public class StandardDecoder implements SerialDataDecoder<TelemetryModel>{
         String s = data.toString().replace("<", "").replace(">", "");
         String[] values = s.split(";");
         
-        if(values.length!=4){
+        if(values.length!=6){
             return null;
         }
         
@@ -40,8 +40,9 @@ public class StandardDecoder implements SerialDataDecoder<TelemetryModel>{
                     Double.parseDouble(values[0]),
                     Double.parseDouble(values[1]),
                     Double.parseDouble(values[2]),
-                    true, // atualizar quando tiver
-                    Long.parseLong(values[3]),
+                    Boolean.parseBoolean(values[3]),
+                    Boolean.parseBoolean(values[4]),
+                    Long.parseLong(values[5]),
                     null, // atualizar quando tiver
                     null // atualizar quando tiver
             );
