@@ -1,10 +1,7 @@
 package com.rocket.groundstation.telemetry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.math3.fitting.PolynomialCurveFitter;
-import org.apache.commons.math3.fitting.WeightedObservedPoints;
 
 
 public class TelemetryAnalyzer {
@@ -71,11 +68,11 @@ public class TelemetryAnalyzer {
     }
     
     private int updateApogee(){
-        apogee = telemetryData.getFirst();
+        apogee = new TelemetryModel();
         int apogeeIndex = 0;
         int i = 0;
         for(TelemetryModel tm : telemetryData){
-            if(tm.getAltitude()>apogee.getAltitude()){
+            if(tm.getAltitude()>apogee.getAltitude() && tm.getAltitude()<9000){
                 apogee = tm;
                 apogeeIndex = i;
             }
@@ -85,67 +82,82 @@ public class TelemetryAnalyzer {
     }
     
     private void updateImpact(int apogeeIndex){
+        List<TelemetryModel> descent = telemetryData.subList(apogeeIndex, telemetryData.size()-1);
+        
         int endPointIndex = 0;
-        for(TelemetryModel tm : telemetryData){
-            if(tm.getUptime()-apogee.getUptime()<=300000) break;
+        for(TelemetryModel tm : descent){
+            if(tm.getUptime()-apogee.getUptime()>=300000) break;
             endPointIndex++;
         }
         
-        List<TelemetryModel> points = telemetryData.subList((endPointIndex+apogeeIndex)/2, endPointIndex);
-        
-        WeightedObservedPoints wop = new WeightedObservedPoints();
-        
-        for(TelemetryModel point : points){
-            wop.add(point.getUptime()/1000, point.getAltitude());
+        int startingPointIndex = 0;
+        double minAlt = 0.6 * apogee.getAltitude();
+        for(TelemetryModel tm : descent){
+            if(tm.getAltitude()<=minAlt && tm.getAltitude()>0) break;
+            startingPointIndex++;
         }
         
-        PolynomialCurveFitter pcf = PolynomialCurveFitter.create(3);
-        double[] c = pcf.fit(wop.toList());
+        if(endPointIndex<=startingPointIndex) return;
         
-        System.out.println(Arrays.toString(c));
+        descent = descent.subList(startingPointIndex, endPointIndex);
         
-        for(TelemetryModel point : points){
-            double t = point.getUptime()/1000;
-            double velocity = c[1] + 2*c[2]*t + 3*c[3]*t*t;
-            if(velocity<2){
-                impact = point;
-                break;
-            }
+        int window = 20;
+        
+        ArrayList<TelemetryModel> sample = f(descent, window);
+        ArrayList<TelemetryModel> oldSample = sample;
+        
+        while(sample!=null && !sample.isEmpty()){
+            oldSample = sample;
+            window /= 2;
+            sample = f(sample, window);
         }
+        impact = oldSample.getLast();
     }
     
-    private void updateLaunch(int apogeeIndex){
-        TelemetryModel startingPoint = null;
-        int strPointIndex = 0;
-        for(TelemetryModel tm : telemetryData){
-            if(apogee.getUptime()-tm.getUptime()<=20000){
-                startingPoint = tm;
-                break;
+    private ArrayList f(List<TelemetryModel> data, int window){
+        if(window<=1) return null;
+        
+        double mean = 0;
+        double mean2 = 0;
+        int count = 0;
+        int index = 0;
+        boolean dataEnded = false;
+        ArrayList<TelemetryModel> points = new ArrayList<>();
+        
+        while(!dataEnded){
+            if(index>=data.size()) return points;
+            
+            points.clear();
+            for(int i = 0; i<window; i++){
+                if(index<data.size()){
+                    points.add(data.get(index));
+                }else{
+                    window = i;
+                    if(window<=1) return points;
+                    dataEnded = true;
+                    break;
+                }
+                index++;
             }
-            strPointIndex++;
-        }
-        if(startingPoint==null) return;
-        
-        List<TelemetryModel> points = telemetryData.subList(strPointIndex, apogeeIndex);
-        
-        WeightedObservedPoints wop = new WeightedObservedPoints();
-        
-        for(TelemetryModel point : points){
-            wop.add(point.getUptime()/1000, point.getAltitude());
-        }
-        
-        PolynomialCurveFitter pcf = PolynomialCurveFitter.create(4);
-        double[] c = pcf.fit(wop.toList());
-        
-        System.out.println(Arrays.toString(c));
-        
-        for(TelemetryModel point : points){
-            double t = point.getUptime()/1000;
-            double velocity = c[1] + 2*c[2]*t + 3*c[3]*t*t + 4*c[4]*t*t*t;
-            if(velocity>3){
-                launch = point;
-                break;
+            
+            for(TelemetryModel point : points){
+                if(count<window/2){
+                    mean += point.getAltitude() / (window/2);
+                    count++;
+                } else if(count<window){
+                    mean2 += point.getAltitude() / (window/2);
+                    count++;
+                }
             }
+            double d = mean - mean2;
+            if(-2<d && d<2){
+                return points;
+            }
+            mean = 0;
+            mean2 = 0;
+            count = 0;
+            index = index - window + 1;
         }
+        return points;
     }
 }

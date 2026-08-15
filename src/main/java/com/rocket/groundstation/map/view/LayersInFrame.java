@@ -193,6 +193,7 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
         trajNameLb.setText("Selecione uma trajetória");
 
         detailLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        detailLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         detailLb.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         detailLb.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(102, 102, 102)));
         jScrollPane3.setViewportView(detailLb);
@@ -340,12 +341,12 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
         
         double rtApogee = (apogee.getUptime()-launch.getUptime()) / 1000.0;
         if(rtApogee<0) rtApogee = 0;
-        double rtImpact = (apogee.getUptime()-launch.getUptime()) / 1000.0;
+        double rtImpact = (impact.getUptime()-launch.getUptime()) / 1000.0;
         if(rtImpact<0) rtImpact = 0;
         
         detailLb.setText(
             "<html>" +
-            "<div style='margin: 6px 10px;'>" +
+            "<div style='margin: 20px 0px;'>" +
 
             "<table cellpadding='5' cellspacing='0'>" +
 
@@ -386,7 +387,7 @@ public class LayersInFrame extends javax.swing.JInternalFrame {
                         
             "<tr>" +
                 "<td><b>Tempo relativo</b></td>" +
-                "<td align='right'>" + String.format("%.2f s", 0) + "</td>" +
+                "<td align='right'>" + String.format("%.2f s", 0.0) + "</td>" +
                 "<td align='right'>" + String.format("%.2f s", rtApogee) + "</td>" +
                 "<td align='right'>" + String.format("%.2f s", rtImpact) + "</td>" +
             "</tr>" +
