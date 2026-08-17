@@ -14,7 +14,8 @@ import java.nio.file.Paths;
 public class SettingsModel {
     //-------General settings-------//
     private DisplayMode displayMode;
-    private String wallpaperPath;
+    @JsonProperty
+    ("wallpaperPath") private String wallpaperPath;
     
     //-------Serial settings-------//
     @JsonIgnore
@@ -49,7 +50,7 @@ public class SettingsModel {
         timeOutMode = com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_BLOCKING;
         readTimeOut = 0;
         
-        mapPath = "maps/teste.map";
+        mapPath = "maps/mapa.map";
         renderThemePath = "maps/themes/Elevate.xml";
         satRenderThemePath = "maps/themes/sat.xml";
         
@@ -151,7 +152,7 @@ public class SettingsModel {
         
         String old = this.wallpaperPath;
         this.wallpaperPath = wallpaperPath;
-        pcs.firePropertyChange("wallpaper", old, displayMode);
+        pcs.firePropertyChange("wallpaperPath", old, displayMode);
     }
     
     public void setMapPath(String mapPath, boolean checkLastValue){
@@ -160,6 +161,46 @@ public class SettingsModel {
         String old = this.mapPath;
         this.mapPath = mapPath;
         pcs.firePropertyChange("mapPath", old, mapPath);
+    }
+    
+    public void setRenderThemePath(String renderThemePath, boolean checkLastValue){
+        if(checkLastValue && renderThemePath.equals(this.renderThemePath)) return;
+        
+        String old = this.renderThemePath;
+        this.renderThemePath = renderThemePath;
+        pcs.firePropertyChange("renderThemePath", old, renderThemePath);
+    }
+    
+    public void setSatRenderThemePath(String satRenderThemePath, boolean checkLastValue){
+        if(checkLastValue && satRenderThemePath.equals(this.satRenderThemePath)) return;
+        
+        String old = this.satRenderThemePath;
+        this.satRenderThemePath = satRenderThemePath;
+        pcs.firePropertyChange("satRenderThemePath", old, satRenderThemePath);
+    }
+    
+    public void setBufferSize(int bufferSize, boolean checkLastValue){
+        if(checkLastValue && bufferSize==this.bufferSize) return;
+        
+        int old = this.bufferSize;
+        this.bufferSize = bufferSize;
+        pcs.firePropertyChange("bufferSize", old, bufferSize);
+    }
+    
+    public void setTimeOutMode(int timeOutMode, boolean checkLastValue){
+        if(checkLastValue && timeOutMode==this.timeOutMode) return;
+        
+        int old = this.timeOutMode;
+        this.timeOutMode = timeOutMode;
+        pcs.firePropertyChange("timeOutMode", old, timeOutMode);
+    }
+    
+    public void setReadTimeOut(int readTimeOut, boolean checkLastValue){
+        if(checkLastValue && readTimeOut==this.readTimeOut) return;
+        
+        int old = this.readTimeOut;
+        this.readTimeOut = readTimeOut;
+        pcs.firePropertyChange("readTimeOut", old, readTimeOut);
     }
     
     public void addPropertyChangeListener(PropertyChangeListener listener) {

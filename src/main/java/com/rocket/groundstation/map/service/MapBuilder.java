@@ -125,6 +125,26 @@ public class MapBuilder {
         transparentLayer.requestRedraw();
     }
     
+    public void setRenderTheme(Path renderThemePath){
+        this.renderThemePath = renderThemePath;
+        
+        try{
+            normalLayer.setXmlRenderTheme(new ExternalRenderTheme(renderThemePath.toFile()));
+        } catch(FileNotFoundException | NullPointerException ex){
+            normalLayer.setXmlRenderTheme(MapsforgeThemes.DEFAULT);
+        }
+    }
+    
+    public void setSatRenderTheme(Path satRenderThemePath){
+        this.satRenderThemePath = satRenderThemePath;
+        
+        try{
+            transparentLayer.setXmlRenderTheme(new ExternalRenderTheme(satRenderThemePath.toFile()));
+        } catch(FileNotFoundException | NullPointerException ex){
+            transparentLayer.setXmlRenderTheme(MapsforgeThemes.DEFAULT);
+        }
+    }
+    
     private void mapSetup(Path mapPath) throws InvalidPathException{
         new File("maps/cache").mkdirs();
         new File("maps/themes").mkdirs();

@@ -90,6 +90,7 @@ public class DesktopForm extends javax.swing.JFrame {
         serialMonitorLb = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Ground Station - 2026");
 
         openMapBt.setBackground(new Color(0x00000000));
         openMapBt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N

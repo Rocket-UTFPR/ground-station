@@ -127,6 +127,10 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         else caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
     }        
     
+    public void serialReadTbSetText(String t){
+        serialReadTb.setText(t);
+    }
+    
     public void updatePortsCb(String[] ports){
         portsCb.removeAllItems();
         for(String port : ports){

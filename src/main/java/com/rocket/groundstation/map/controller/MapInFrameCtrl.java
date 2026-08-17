@@ -15,6 +15,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
+import java.nio.file.Path;
 import java.util.Locale;
 import javax.swing.SwingUtilities;
 
@@ -203,6 +204,10 @@ public class MapInFrameCtrl {
                     settings.setMapPath(e.getOldValue().toString(), true);
                 }
             } else revertingMapChange = false;
+        } else if(e.getPropertyName().equals("renderThemePath")){
+            if(mb!=null) mb.setRenderTheme(settings.getRenderThemePath());
+        } else if(e.getPropertyName().equals("satRenderThemePath")){
+            if(mb!=null) mb.setSatRenderTheme(settings.getSatRenderThemePath());
         }
     }
 }

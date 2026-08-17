@@ -50,7 +50,7 @@ public class DesktopCtrl {
     
     private void settingsChanged(PropertyChangeEvent e){
         if(e.getPropertyName().equals("displayMode")) changeDisplayMode(e);
-        else if(e.getPropertyName().equals("wallpaper")) try{
+        else if(e.getPropertyName().equals("wallpaperPath")) try{
             desktopForm.setBackgroundImage(settings.getWallpaperPath());
         }catch(Exception ex){}
     }
