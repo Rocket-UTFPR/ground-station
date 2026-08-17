@@ -1,6 +1,6 @@
 package com.rocket.groundstation.map.model;
 
-import com.rocket.groundstation.app.TelemetryModel;
+import com.rocket.groundstation.telemetry.TelemetryModel;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;

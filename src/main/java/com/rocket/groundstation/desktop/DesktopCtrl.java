@@ -17,6 +17,8 @@ public class DesktopCtrl {
         this.settings = settings;
         this.desktop = desktop;
         
+        desktopForm.setDisplayMode(settings.getDisplayMode());
+        desktopForm.setBackgroundImage(settings.getWallpaperPath());
         addListeners();        
     }
 
@@ -28,6 +30,7 @@ public class DesktopCtrl {
         desktopForm.addOpenMapBtListener((e)->desktopForm.showInFrame(desktop.openMapInFrame()));
         desktopForm.addOpenLayersBtListener((e)->desktopForm.showInFrame(desktop.openLayersInFrame()));
         desktopForm.addOpenSerialMonitorBtListener((e)->desktopForm.showInFrame(desktop.openSerialMonitorInFrame()));
+        desktopForm.addOpenFileBtListener((e)->desktopForm.showInFrame(desktop.openFileInFrame()));
         desktopForm.addOpenSettingsBtListener((e)->desktopForm.showInFrame(desktop.openSettingsInFrame()));
         desktopForm.addToggleFullscreenAction(desktopToggleDisplayMode());
         
@@ -39,14 +42,17 @@ public class DesktopCtrl {
             @Override
             public void actionPerformed(ActionEvent e){
                 if(desktopForm.getDisplayMode()==DisplayMode.WINDOWED) 
-                    settings.setDisplayMode(desktopForm.getOldDisplayMode());
-                else settings.setDisplayMode(DisplayMode.WINDOWED);
+                    settings.setDisplayMode(desktopForm.getOldDisplayMode(), true);
+                else settings.setDisplayMode(DisplayMode.WINDOWED, true);
             }
         };
     }
     
     private void settingsChanged(PropertyChangeEvent e){
         if(e.getPropertyName().equals("displayMode")) changeDisplayMode(e);
+        else if(e.getPropertyName().equals("wallpaperPath")) try{
+            desktopForm.setBackgroundImage(settings.getWallpaperPath());
+        }catch(Exception ex){}
     }
     
     private void changeDisplayMode(PropertyChangeEvent e){

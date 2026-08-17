@@ -1,19 +1,21 @@
 package com.rocket.groundstation.map.controller;
 
 import com.rocket.groundstation.exceptions.InvalidPathException;
-import com.rocket.groundstation.app.TelemetryModel;
-import com.rocket.groundstation.app.VelocityCalculator;
+import com.rocket.groundstation.telemetry.TelemetryModel;
+import com.rocket.groundstation.telemetry.VelocityCalculator;
 import com.rocket.groundstation.map.service.MapBuilder;
 import com.rocket.groundstation.map.view.MapInFrame;
 import com.rocket.groundstation.map.service.LayerService;
+import com.rocket.groundstation.serial.core.dispatch.DataDispatcher;
 import com.rocket.groundstation.settings.SettingsModel;
 import com.rocket.groundstation.serial.core.dispatch.DataListener;
-import com.rocket.groundstation.serial.core.read.SerialReadService;
 import com.rocket.groundstation.util.GpsUtils;
 import com.rocket.groundstation.util.InFrameFixer;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ItemEvent;
+import java.beans.PropertyChangeEvent;
+import java.nio.file.Path;
 import java.util.Locale;
 import javax.swing.SwingUtilities;
 
@@ -21,7 +23,7 @@ import javax.swing.SwingUtilities;
 public class MapInFrameCtrl {
     private MapInFrame mapInFrame;
     private SettingsModel settings;
-    private SerialReadService<TelemetryModel> srs;
+    private DataDispatcher<TelemetryModel> ddd;
     private LayerService ls;
     private MapBuilder mb;
     private VelocityCalculator vc;
@@ -31,18 +33,17 @@ public class MapInFrameCtrl {
     private DataListener<TelemetryModel> positionMarker;
     private DataListener<TelemetryModel> tracker;
     private DataListener<TelemetryModel> routeDrawer;
+    private boolean revertingMapChange;
     
-    public MapInFrameCtrl(
-            MapInFrame mapInFrame, SettingsModel settings, 
-            SerialReadService<TelemetryModel> srs, LayerService rs
-    ){
+    public MapInFrameCtrl(MapInFrame mapInFrame, SettingsModel settings, DataDispatcher<TelemetryModel> ddd, LayerService rs){
         this.mapInFrame = mapInFrame;
         this.settings = settings;
-        this.srs = srs;
+        this.ddd = ddd;
         this.ls = rs;
         lastLatRead = -21.938391;
         lastLonRead = -48.950188;
         vc = new VelocityCalculator(settings.getDistanceSample(), settings.getAltSample());
+        revertingMapChange = false;
         
         InFrameFixer.fix(this.mapInFrame);
         
@@ -59,13 +60,14 @@ public class MapInFrameCtrl {
         try{
             mb = new MapBuilder(
                     settings.getMapPath(),
-                    settings.getRenderThemePath()
+                    settings.getRenderThemePath(),
+                    settings.getSatRenderThemePath()
             ); 
             mapInFrame.setMap(mb.getMap());
             ls.setMap(mapInFrame.getMap());
         } catch(InvalidPathException ex){
             mapInFrame.showErrorMsg(
-                    "Arquivo não encontrado: " + ex.getPath(), 
+                    "Arquivo inválido: " + ex.getPath(), 
                     "Erro ao carregar o mapa"
             );
         }
@@ -115,13 +117,14 @@ public class MapInFrameCtrl {
     }
     
     private void addListeners(){
-        srs.getDecodedDataDispatcher().addDataListener(displayUpdater);
+        ddd.addDataListener(displayUpdater);
         mapInFrame.addCopyBtListener((e)->copyCoordinatesToClipboard());
         mapInFrame.addPositionMarkerCbListener((e)->markPosition(e));
         mapInFrame.addTrackCbListener((e)->trackPosition(e));
         mapInFrame.addSatCbListener((e)->toggleSat(e));
         mapInFrame.addTrajectoryTbListener((e)->drawRoute(e));
         mapInFrame.addCenterMapBtActionListener((e)->centerMap());
+        settings.addPropertyChangeListener((e)->settingsChange(e));
     }
     
     private void copyCoordinatesToClipboard(){
@@ -138,34 +141,34 @@ public class MapInFrameCtrl {
     private void markPosition(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
             mapInFrame.positionMarkerUpdate(lastLatRead, lastLonRead);
-            srs.getDecodedDataDispatcher().addDataListener(positionMarker);
+            ddd.addDataListener(positionMarker);
             mapInFrame.positionMarkerSetVisible(true);
         } else{
             mapInFrame.positionMarkerSetVisible(false);
-            srs.getDecodedDataDispatcher().removeDataListener(positionMarker);
+            ddd.removeDataListener(positionMarker);
         }
     }
     
     private void trackPosition(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
             mapInFrame.mapSetCenter(lastLatRead, lastLonRead);
-            srs.getDecodedDataDispatcher().addDataListener(tracker);
+            ddd.addDataListener(tracker);
         } else{
-            srs.getDecodedDataDispatcher().removeDataListener(tracker);
+            ddd.removeDataListener(tracker);
         }
     }
     
     private void drawRoute(ItemEvent e){
         if(e.getStateChange()==ItemEvent.SELECTED){
             ls.startNewTrajectory(mapInFrame.trajectoryNameTfGetText());
-            srs.getDecodedDataDispatcher().addDataListener(routeDrawer);
-            mapInFrame.trajectoryTbSetText("Finalizar rota");
+            ddd.addDataListener(routeDrawer);
+            mapInFrame.trajectoryTbSetText("Finalizar trajetória");
             mapInFrame.trajectoryNameTfSetEnabled(false);
             mapInFrame.positionMarkerToFront();
         } else{
             ls.saveCurrentTrajectory();
-            srs.getDecodedDataDispatcher().removeDataListener(routeDrawer);
-            mapInFrame.trajectoryTbSetText("Iniciar nova rota");
+            ddd.removeDataListener(routeDrawer);
+            mapInFrame.trajectoryTbSetText("Iniciar trajetória");
             mapInFrame.trajectoryNameTfSetEnabled(true);
         }
     }
@@ -183,6 +186,28 @@ public class MapInFrameCtrl {
             );
         } catch(NumberFormatException ex){
             mapInFrame.showErrorMsg("Use apenas números e ponto", "Formato inválido");
+        }
+    }
+    
+    private void settingsChange(PropertyChangeEvent e){
+        if(e.getPropertyName().equals("mapPath")){
+            if(mb==null) mapSetup();
+            else if(!revertingMapChange){
+                try{
+                    mb.changeMap(settings.getMapPath());
+                } catch (InvalidPathException ex){
+                    mapInFrame.showErrorMsg(
+                        "Arquivo inválido: " + ex.getPath(), 
+                        "Erro ao carregar o mapa"
+                    );
+                    revertingMapChange = true;
+                    settings.setMapPath(e.getOldValue().toString(), true);
+                }
+            } else revertingMapChange = false;
+        } else if(e.getPropertyName().equals("renderThemePath")){
+            if(mb!=null) mb.setRenderTheme(settings.getRenderThemePath());
+        } else if(e.getPropertyName().equals("satRenderThemePath")){
+            if(mb!=null) mb.setSatRenderTheme(settings.getSatRenderThemePath());
         }
     }
 }

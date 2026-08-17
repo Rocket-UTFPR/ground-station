@@ -1,6 +1,6 @@
 package com.rocket.groundstation.serial.serialmonitor;
 
-import com.rocket.groundstation.app.TelemetryModel;
+import com.rocket.groundstation.telemetry.TelemetryModel;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.rocket.groundstation.settings.SettingsModel;
@@ -83,16 +83,16 @@ public class SerialMonitorInFrameCtrl {
                 
                 srs.startSerialRead();
                 serialMonitorInFrame.portsCbSetEnabled(false);
+                serialMonitorInFrame.serialReadTbSetText("Parar leitura");
             } catch(SerialPortInvalidPortException | IllegalArgumentException ex){
                 serialMonitorInFrame.showErrorMsg("Porta não selecionada", "Erro");
-                serialMonitorInFrame.deselectSerialReadTb();
             } catch(CantOpenPortException ex){
                 serialMonitorInFrame.showErrorMsg("Não se pôde abrir a porta selecionada", "Erro");
-                serialMonitorInFrame.deselectSerialReadTb();
             }
         } else{
             srs.stopSerialRead();
             serialMonitorInFrame.portsCbSetEnabled(true);
+            serialMonitorInFrame.serialReadTbSetText("Iniciar leitura");
         }
     }
     

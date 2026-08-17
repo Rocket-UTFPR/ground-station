@@ -127,6 +127,10 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
         else caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
     }        
     
+    public void serialReadTbSetText(String t){
+        serialReadTb.setText(t);
+    }
+    
     public void updatePortsCb(String[] ports){
         portsCb.removeAllItems();
         for(String port : ports){
@@ -140,10 +144,6 @@ public class SerialMonitorInFrame extends javax.swing.JInternalFrame {
      
     public int getSelectedBaud(){
         return (Integer) baudCb.getSelectedItem();
-    }
-    
-    public void deselectSerialReadTb(){
-        serialReadTb.setSelected(false);
     }
     
     public void portsCbSetEnabled(boolean enabled){

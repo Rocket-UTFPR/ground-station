@@ -1,8 +1,9 @@
 package com.rocket.groundstation.settings;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.rocket.groundstation.util.InFrameFixer;
-import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
+import java.io.IOException;
 
 
 public class SettingsInFrameCtrl {
@@ -15,7 +16,9 @@ public class SettingsInFrameCtrl {
         
         InFrameFixer.fix(this.settingsInFrame);
         
-        updateDisplayModeCb(settings.getDisplayMode());
+        restoreGeneralTab();
+        restoreMapTab();
+        restoreSerialTab();
         addListeners();
     }
     
@@ -23,26 +26,64 @@ public class SettingsInFrameCtrl {
         return settingsInFrame;
     }
     
-    private void updateDisplayModeCb(DisplayMode dm){
-        if(null!=dm) switch (dm) {
-            case WINDOWED -> settingsInFrame.setDisplayModeCbSelected(0);
-            case BORDERLESSWINDOW -> settingsInFrame.setDisplayModeCbSelected(1);
-            case FULLSCREEN -> settingsInFrame.setDisplayModeCbSelected(2);
+    private void restoreGeneralTab(){
+        settingsInFrame.displayModeCbSetDisplayMode(settings.getDisplayMode());
+        settingsInFrame.wpPathTfSetText(settings.getWallpaperPath());
+    }
+    private void restoreMapTab(){
+        settingsInFrame.mapPathTfSetText(settings.getMapPath().toString());
+        settingsInFrame.themePathTfSetText(settings.getRenderThemePath().toString());
+        settingsInFrame.satThemePathTfSetText(settings.getSatRenderThemePath().toString());
+    }
+    private void restoreSerialTab(){
+        settingsInFrame.bufferSizeSpnrSetValue(settings.getBufferSize());
+        switch(settings.getTimeOutMode()){
+            case SerialPort.TIMEOUT_NONBLOCKING -> settingsInFrame.timeOutModeCbSetMode("Não Bloqueante");
+            case SerialPort.TIMEOUT_READ_SEMI_BLOCKING -> settingsInFrame.timeOutModeCbSetMode("Semi Bloqueante");
+            case SerialPort.TIMEOUT_READ_BLOCKING -> settingsInFrame.timeOutModeCbSetMode("Bloqueante");
         }
+        settingsInFrame.readTimeOutSpnrSetValue(settings.getReadTimeOut());
     }
     
+    
     private void addListeners(){
-        settingsInFrame.addDisplayModeCbListener((il)->changeDisplayMode(il));
+        settingsInFrame.addGeneralApplyBtListener((e)->generalApply());
+        settingsInFrame.addMapApplyBtListener((e)->mapApply());
+        settingsInFrame.addSerialApplyBtListener((e)->serialApply());
+        settingsInFrame.addGeneralRestoreBtListener((e)->restoreGeneralTab());
+        settingsInFrame.addMapRestoreBtListener((e)->restoreMapTab());
+        settingsInFrame.addSerialRestoreBtListener((e)->restoreSerialTab());
         settings.addPropertyChangeListener((e)->settingsChanged(e));
     }
     
-    private void changeDisplayMode(ItemEvent il){
-        DisplayMode dm = DisplayMode.valueOf(il.getItem());
-        if(dm==settings.getDisplayMode() || il.getStateChange()==ItemEvent.DESELECTED) return;
-        settings.setDisplayMode(dm);
+    private void generalApply(){
+        settings.setDisplayMode(settingsInFrame.displayModeCbGetDisplayMode(), true);
+        settings.setWallpaperPath(settingsInFrame.wpPathTfGetText(), true);
+    }
+    
+    private void mapApply(){
+        settings.setMapPath(settingsInFrame.mapPathTfGetText(), true);
+        settings.setRenderThemePath(settingsInFrame.themePathTfGetText(), true);
+        settings.setSatRenderThemePath(settingsInFrame.satThemePathTfGetText(), true);
+    }
+    
+    private void serialApply(){
+        settings.setBufferSize(settingsInFrame.bufferSizeSpnrGetValue(), true);
+        switch(settingsInFrame.timeOutModeCbGetSelected()){
+            case "Não Bloqueante" -> settings.setTimeOutMode(SerialPort.TIMEOUT_NONBLOCKING, true);
+            case "Semi Bloqueante" -> settings.setTimeOutMode(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, true);
+            case "Bloqueante" -> settings.setTimeOutMode(SerialPort.TIMEOUT_READ_BLOCKING, true);
+        }
+        settings.setReadTimeOut(settingsInFrame.readTimeOutSpnrGetValue(), true);
     }
     
     private void settingsChanged(PropertyChangeEvent e){
-        if(e.getPropertyName().equals("displayMode")) updateDisplayModeCb((DisplayMode) e.getNewValue());
+        try {
+            SettingsService.save(settings);
+        } catch (IOException ex) {
+            settingsInFrame.showErrorMsg(ex.getMessage(), "Erro ao salvar as configurações no arquivo");
+        }
+        
+        if(e.getPropertyName().equals("displayMode")) settingsInFrame.displayModeCbSetDisplayMode((DisplayMode) e.getNewValue());
     }
 }

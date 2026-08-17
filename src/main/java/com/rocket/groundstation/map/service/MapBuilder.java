@@ -25,20 +25,32 @@ import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
 
 public class MapBuilder {
     private MapView map;
+    
     private TileRendererLayer normalLayer;
     private TileRendererLayer transparentLayer;
     private TileDownloadLayer satelliteLayer;
+    
+    private HillsRenderConfig hillsConfig;
+    private Path renderThemePath;
+    private Path satRenderThemePath;
+    private MapDataStore mapDataStore;
+    private TileCache nlTileCache;
+    private TileCache tlTileCache;
+    
     private float normalScaleFactor;
     private float satScaleFactor;
     
-    public MapBuilder(Path mapPath, Path renderThemePath) throws InvalidPathException{
+    
+    public MapBuilder(Path mapPath, Path renderThemePath, Path satRenderThemePath) throws InvalidPathException{
         if(mapPath==null) throw new InvalidPathException("Map path can't be null", "null");
         
+        this.renderThemePath = renderThemePath;
+        this.satRenderThemePath = satRenderThemePath;
         satScaleFactor = 1f;
         normalScaleFactor = 1f;
         
         map = new MapView();
-        mapSetup(mapPath, renderThemePath);
+        mapSetup(mapPath);
     }
     
     public MapView getMap(){
@@ -81,12 +93,63 @@ public class MapBuilder {
         satelliteLayer.onPause();
     }
     
-    private void mapSetup(Path mapPath, Path renderThemePath) throws InvalidPathException{
+    public void changeMap(Path newMapPath) throws InvalidPathException{
+        if(newMapPath==null) throw new InvalidPathException("New map path can't be null", "null");
+        
+        MapDataStore newMapDataStore;
+        try{
+            newMapDataStore = new MapFile(newMapPath.toFile());
+        } catch(MapFileException ex){
+            throw new InvalidPathException("Invalid map path", newMapPath.toString());
+        }
+        if(this.mapDataStore!=null) this.mapDataStore.close();
+        this.mapDataStore = newMapDataStore;
+        boolean isSatVisible = satelliteLayer.isVisible();
+        
+        map.getLayerManager().getLayers().remove(normalLayer);
+        map.getLayerManager().getLayers().remove(transparentLayer);
+        if (this.nlTileCache != null) this.nlTileCache.purge();
+        if (this.tlTileCache != null) this.tlTileCache.purge();
+        normalLayer.onDestroy();
+        transparentLayer.onDestroy();
+        
+        mapLayersSetup();
+        
+        normalLayer.setVisible(!isSatVisible);
+        transparentLayer.setVisible(isSatVisible);
+        
+        map.getLayerManager().getLayers().add(0, normalLayer);
+        map.getLayerManager().getLayers().add(2, transparentLayer);
+        
+        normalLayer.requestRedraw();
+        transparentLayer.requestRedraw();
+    }
+    
+    public void setRenderTheme(Path renderThemePath){
+        this.renderThemePath = renderThemePath;
+        
+        try{
+            normalLayer.setXmlRenderTheme(new ExternalRenderTheme(renderThemePath.toFile()));
+        } catch(FileNotFoundException | NullPointerException ex){
+            normalLayer.setXmlRenderTheme(MapsforgeThemes.DEFAULT);
+        }
+    }
+    
+    public void setSatRenderTheme(Path satRenderThemePath){
+        this.satRenderThemePath = satRenderThemePath;
+        
+        try{
+            transparentLayer.setXmlRenderTheme(new ExternalRenderTheme(satRenderThemePath.toFile()));
+        } catch(FileNotFoundException | NullPointerException ex){
+            transparentLayer.setXmlRenderTheme(MapsforgeThemes.DEFAULT);
+        }
+    }
+    
+    private void mapSetup(Path mapPath) throws InvalidPathException{
         new File("maps/cache").mkdirs();
         new File("maps/themes").mkdirs();
         new File("maps/hgt").mkdirs();
         
-        MapDataStore mapDataStore;
         try{
             mapDataStore = new MapFile(mapPath.toFile());
         }catch(MapFileException ex){
@@ -100,10 +163,26 @@ public class MapBuilder {
                 AwtGraphicFactory.INSTANCE
         );
 
-        HillsRenderConfig hillsConfig = new HillsRenderConfig(hgtSource);
+        hillsConfig = new HillsRenderConfig(hgtSource);
         hillsConfig.indexOnThread();
         
-        mapLayersSetup(mapDataStore, hillsConfig, renderThemePath);
+        File nlCacheDir = new File("maps/cache/n_cache");
+        nlCacheDir.mkdirs();
+        nlTileCache = AwtUtil.createTileCache(map.getModel().displayModel.getTileSize(),
+            1.0,
+            1024,
+            nlCacheDir
+        );
+        
+        File tlCacheDir = new File("maps/cache/t_cache");
+        tlCacheDir.mkdirs();
+        tlTileCache = AwtUtil.createTileCache(map.getModel().displayModel.getTileSize(),
+            1.0,
+            1024,
+            tlCacheDir
+        );
+        
+        mapLayersSetup();
         satLayerSetup();
         
         
@@ -124,15 +203,7 @@ public class MapBuilder {
         map.getModel().mapViewPosition.setZoomLevel((byte) 10);
     }
     
-    private void mapLayersSetup(MapDataStore mapDataStore, HillsRenderConfig hillsConfig, Path renderThemePath){
-        File nlCacheDir = new File("maps/cache/n_cache");
-        nlCacheDir.mkdirs();
-        TileCache nlTileCache = AwtUtil.createTileCache(map.getModel().displayModel.getTileSize(),
-            1.0,
-            1024,
-            nlCacheDir
-        );
-        
+    private void mapLayersSetup(){
         normalLayer = new TileRendererLayer(
                 nlTileCache,
                 mapDataStore,
@@ -140,14 +211,6 @@ public class MapBuilder {
                 false, true, false,
                 AwtGraphicFactory.INSTANCE,
                 hillsConfig
-        );
-        
-        File tlCacheDir = new File("maps/cache/t_cache");
-        tlCacheDir.mkdirs();
-        TileCache tlTileCache = AwtUtil.createTileCache(map.getModel().displayModel.getTileSize(),
-            1.0,
-            1024,
-            tlCacheDir
         );
         
         transparentLayer = new TileRendererLayer(
@@ -166,8 +229,8 @@ public class MapBuilder {
         }
         
         try {
-            transparentLayer.setXmlRenderTheme(new ExternalRenderTheme(new File("maps/themes/sat.xml")));
-        } catch (FileNotFoundException ex) {
+            transparentLayer.setXmlRenderTheme(new ExternalRenderTheme(satRenderThemePath.toFile()));
+        } catch (FileNotFoundException | NullPointerException ex) {
             transparentLayer.setXmlRenderTheme(MapsforgeThemes.DEFAULT);
         }
     }

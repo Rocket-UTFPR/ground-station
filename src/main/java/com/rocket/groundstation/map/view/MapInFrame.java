@@ -55,6 +55,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         trajectoryNameTf = new javax.swing.JTextField();
         trajectoryTb = new javax.swing.JToggleButton();
         coordOnClickCb = new javax.swing.JCheckBox();
+        trajNameLb = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -62,14 +63,14 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         setResizable(true);
         setTitle("Mapa");
 
-        split.setDividerLocation(700);
+        split.setDividerLocation(720);
         split.setResizeWeight(1.0);
 
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 698, Short.MAX_VALUE)
+            .addGap(0, 720, Short.MAX_VALUE)
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,13 +112,16 @@ public class MapInFrame extends javax.swing.JInternalFrame {
         centerMapBt.setText("Centralizar");
 
         trajectoryNameTf.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        trajectoryNameTf.setToolTipText("Nome da rota");
+        trajectoryNameTf.setToolTipText("Nome do trajeto");
 
         trajectoryTb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        trajectoryTb.setText("Iniciar trajetória");
+        trajectoryTb.setText("Iniciar Trajetória");
 
         coordOnClickCb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         coordOnClickCb.setText("Mostrar coordenadas com clique");
+
+        trajNameLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        trajNameLb.setText("Nome:");
 
         javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
         infoPanel.setLayout(infoPanelLayout);
@@ -126,55 +130,61 @@ public class MapInFrame extends javax.swing.JInternalFrame {
             .addGroup(infoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(trackCb)
-                    .addComponent(copyBt)
-                    .addComponent(satCb)
-                    .addComponent(positionMarkerCb)
                     .addGroup(infoPanelLayout.createSequentialGroup()
-                        .addComponent(trajectoryNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(trajectoryTb))
-                    .addComponent(latLb)
-                    .addComponent(lonLb)
-                    .addComponent(infoLb)
-                    .addComponent(coordOnClickCb)
-                    .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(centerMapBt)
-                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lonTf, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                            .addComponent(latTf))))
-                .addGap(93, 93, 93))
+                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(trackCb)
+                            .addComponent(satCb)
+                            .addComponent(positionMarkerCb)
+                            .addComponent(latLb)
+                            .addComponent(lonLb)
+                            .addComponent(infoLb)
+                            .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(centerMapBt)
+                                .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lonTf, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                                    .addComponent(latTf)))
+                            .addComponent(copyBt)
+                            .addComponent(coordOnClickCb))
+                        .addGap(97, 97, 97))
+                    .addGroup(infoPanelLayout.createSequentialGroup()
+                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(trajNameLb)
+                            .addComponent(trajectoryNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(trajectoryTb, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0))))
         );
         infoPanelLayout.setVerticalGroup(
             infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoPanelLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(30, 30, 30)
                 .addComponent(infoLb)
                 .addGap(18, 18, 18)
                 .addComponent(copyBt)
-                .addGap(41, 41, 41)
+                .addGap(37, 37, 37)
                 .addComponent(positionMarkerCb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(trackCb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(satCb)
-                .addGap(41, 41, 41)
-                .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(trajectoryNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(trajectoryTb))
-                .addGap(68, 68, 68)
+                .addGap(34, 34, 34)
+                .addComponent(trajNameLb)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(trajectoryNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(trajectoryTb)
+                .addGap(43, 43, 43)
                 .addComponent(latLb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(latTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lonLb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lonTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(centerMapBt)
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addComponent(coordOnClickCb)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addGap(26, 26, 26))
         );
 
         infoSp.setViewportView(infoPanel);
@@ -261,13 +271,13 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     
     public void infoLbSetText(String alt, String lat, String lon, String vertV, String horV, String resV){
         infoLb.setText(
-                "<html><table>"
-                        + "<tr><td><b>Altitude:</b></td><td>" + alt + "</td></tr>"
-                        + "<tr><td><b>Latitude:</b></td><td>" + lat + "</td></tr>"
-                        + "<tr><td><b>Longitude:</b></td><td>" + lon + "</td></tr>"
-                        + "<tr><td><b>Velocidade vertical:</b></td><td>" + vertV + "</td></tr>"
-                        + "<tr><td><b>Velocidade horizontal:</b></td><td>" + horV + "</td></tr>"
-                        + "<tr><td><b>Velocidade resultante:</b></td><td>" + resV + "</td></tr>"
+                "<html><table cellpadding='1' cellspacing='0'>"
+                + "<tr><td style='width:90px'><b>Altitude:</b></td><td>" + alt + "</td></tr>"
+                + "<tr><td style='width:90px'><b>Latitude:</b></td><td>" + lat + "</td></tr>"
+                + "<tr><td style='width:90px'><b>Longitude:</b></td><td>" + lon + "</td></tr>"
+                + "<tr><td style='width:90px'><b>Vel. vertical:</b></td><td>" + vertV + "</td></tr>"
+                + "<tr><td style='width:90px'><b>Vel. horizontal:</b></td><td>" + horV + "</td></tr>"
+                + "<tr><td style='width:90px'><b>Vel. resultante:</b></td><td>" + resV + "</td></tr>"
                 + "</table></html>"
         );
     }
@@ -364,6 +374,7 @@ public class MapInFrame extends javax.swing.JInternalFrame {
     private javax.swing.JSplitPane split;
     private javax.swing.JPanel splitPanel;
     private javax.swing.JCheckBox trackCb;
+    private javax.swing.JLabel trajNameLb;
     private javax.swing.JTextField trajectoryNameTf;
     private javax.swing.JToggleButton trajectoryTb;
     // End of variables declaration//GEN-END:variables

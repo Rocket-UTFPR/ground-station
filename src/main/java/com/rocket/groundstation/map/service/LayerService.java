@@ -1,6 +1,6 @@
 package com.rocket.groundstation.map.service;
 
-import com.rocket.groundstation.app.TelemetryModel;
+import com.rocket.groundstation.telemetry.TelemetryModel;
 import com.rocket.groundstation.map.model.Marker;
 import com.rocket.groundstation.map.model.Trajectory;
 import java.util.ArrayList;
@@ -11,11 +11,11 @@ import org.mapsforge.map.awt.view.MapView;
 public class LayerService {
     private MapView map;
     
-    private final List<Trajectory> trajectories;
+    private List<Trajectory> trajectories;
     private Trajectory currentTrajectory;
     private boolean currentTrajectorySaved;
     
-    private final List<Marker> markers;
+    private List<Marker> markers;
     
     
     public LayerService(){
@@ -32,6 +32,8 @@ public class LayerService {
                 marker.getCircle().setRadius((float) (4.4f / Math.pow(1.85, map.getModel().mapViewPosition.getZoomLevel() - 18)));
             });
         });
+        trajectories = new ArrayList<>();
+        markers = new ArrayList<>();
     }
     
     public void startNewTrajectory(String name){
