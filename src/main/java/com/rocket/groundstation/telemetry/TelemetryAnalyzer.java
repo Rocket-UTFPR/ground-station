@@ -49,21 +49,10 @@ public class TelemetryAnalyzer {
     }
     
     public void updateValues(){
-        int launchIndex = -1;
-        int i = 0;
-        for(TelemetryModel tm : telemetryData){
-            if(tm.isIgnition()){
-                launchIndex = i;
-                launch = tm;
-                break;
-            }
-            i++;
-        }
-        if(launchIndex==-1) return;
-        
-        telemetryData = telemetryData.subList(launchIndex, telemetryData.size()-1);
-        
         int apogeeIndex = updateApogee();
+        
+        updateLaunch(apogeeIndex);
+        
         updateImpact(apogeeIndex);
     }
     
@@ -79,6 +68,39 @@ public class TelemetryAnalyzer {
             i++;
         }
         return apogeeIndex;
+    }
+    
+    private void updateLaunch(int apogeeIndex){
+        int i = apogeeIndex;
+        for(; i>0; i--){
+            if(apogee.getUptime()-telemetryData.get(i).getUptime()>=40000){
+                break;
+            }
+        }
+        launch = telemetryData.get(i);
+        
+        List<TelemetryModel> reversedAscent = telemetryData.subList(i, apogeeIndex).reversed();
+        
+        int startingPointIndex = 0;
+        double minAlt = 0.6 * apogee.getAltitude();
+        for(TelemetryModel tm : reversedAscent){
+            if(tm.getAltitude()<=minAlt && tm.getAltitude()>0) break;
+            startingPointIndex++;
+        }
+        
+        reversedAscent = reversedAscent.subList(startingPointIndex, reversedAscent.size()-1);
+        
+        int window = 20;
+        
+        ArrayList<TelemetryModel> sample = f(reversedAscent, window);
+        ArrayList<TelemetryModel> oldSample = sample;
+        
+        while(sample!=null && !sample.isEmpty()){
+            oldSample = sample;
+            window /= 2;
+            sample = f(sample, window);
+        }
+        launch = oldSample.getLast();
     }
     
     private void updateImpact(int apogeeIndex){

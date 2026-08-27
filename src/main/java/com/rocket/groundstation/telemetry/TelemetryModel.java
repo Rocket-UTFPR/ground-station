@@ -1,6 +1,6 @@
 package com.rocket.groundstation.telemetry;
 
-import java.time.Instant;
+//import java.time.Instant;
 
 
 public class TelemetryModel {
@@ -8,24 +8,22 @@ public class TelemetryModel {
     private double latitude;
     private double longitude;
     private boolean newGpsData;
-    private boolean ignition;
     private long uptime; // rocket
-    private Instant transmissionTime; // rocket
-    private Instant receptionTime; // application
+    //private Instant transmissionTime; // rocket
+    //private Instant receptionTime; // application
     
     public TelemetryModel(){
-        this(0, 0, 0, true, false, 0, null, null);
+        this(0, 0, 0, true, 0);
     }
     
-    public TelemetryModel(double altitude, double latitude, double longitude, boolean newGpsData, boolean ignition, long uptime, Instant transmissionTime, Instant receptionTime) {
+    public TelemetryModel(double altitude, double latitude, double longitude, boolean newGpsData, long uptime) {
         this.altitude = altitude;
         this.latitude = latitude;
         this.longitude = longitude;
         this.newGpsData = newGpsData;
-        this.ignition = ignition;
         this.uptime = uptime;
-        this.transmissionTime = transmissionTime;
-        this.receptionTime = receptionTime;
+        //this.transmissionTime = transmissionTime;
+        //this.receptionTime = receptionTime;
     }    
 
     public double getAltitude() {
@@ -44,21 +42,17 @@ public class TelemetryModel {
         return newGpsData;
     }
     
-    public boolean isIgnition(){
-        return ignition;
-    }
-    
     public long getUptime(){
         return uptime;
     }
     
-    public Instant getTransmissionTime() {
-        return transmissionTime;
-    }
-    
-    public Instant getReceptionTime() {
-        return receptionTime;
-    }
+//    public Instant getTransmissionTime() {
+//        return transmissionTime;
+//    }
+//    
+//    public Instant getReceptionTime() {
+//        return receptionTime;
+//    }
 
     public void setAltitude(double altitude) {
         this.altitude = altitude;
@@ -76,19 +70,15 @@ public class TelemetryModel {
         this.newGpsData = newGpsData;
     }
     
-    public void setIgnition(boolean ignition){
-        this.ignition = ignition;
-    }
-    
     public void setUptime(long uptime){
         this.uptime = uptime;
     }
     
-    public void setTransmissionTime(Instant transmissionTime) {
-        this.transmissionTime = transmissionTime;
-    }
-    
-    public void setReceptionTime(Instant receptionTime) {
-        this.receptionTime = receptionTime;
-    }
+//    public void setTransmissionTime(Instant transmissionTime) {
+//        this.transmissionTime = transmissionTime;
+//    }
+//    
+//    public void setReceptionTime(Instant receptionTime) {
+//        this.receptionTime = receptionTime;
+//    }
 }

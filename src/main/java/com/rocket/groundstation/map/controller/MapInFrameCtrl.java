@@ -15,7 +15,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
-import java.nio.file.Path;
 import java.util.Locale;
 import javax.swing.SwingUtilities;
 
@@ -84,9 +83,9 @@ public class MapInFrameCtrl {
                         String.format(Locale.US, "%.1f m", newData.getAltitude()),
                         GpsUtils.format(newData.getLatitude()),
                         GpsUtils.format(newData.getLongitude()),
-                        String.format(Locale.US, "%.2f km/h", vc.getVerticalVelocity()*3.6),
-                        String.format(Locale.US, "%.2f km/h", vc.getHorizontalVelocity()*3.6),
-                        String.format(Locale.US, "%.2f km/h", vc.getResultantVelocity()*3.6)
+                        String.format(Locale.US, "%.2f m/s", vc.getVerticalVelocity()),
+                        String.format(Locale.US, "%.2f m/s", vc.getHorizontalVelocity()),
+                        String.format(Locale.US, "%.2f m/s", vc.getResultantVelocity())
                 );
             });
         };
