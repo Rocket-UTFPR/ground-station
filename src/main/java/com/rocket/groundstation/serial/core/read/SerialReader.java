@@ -22,7 +22,7 @@ public class SerialReader implements Runnable{
     }
     
     @Override
-    public void run() {        
+    public void run() {   
         port.openPort();
         try {
             while(true){

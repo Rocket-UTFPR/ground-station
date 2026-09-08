@@ -42,6 +42,7 @@ public class SerialMonitorInFrameCtrl {
         int i = 0;
         for(SerialPort serialPort : serialPorts){
             systemPortNames[i] = serialPort.getSystemPortName();
+            i++;
         }
         serialMonitorInFrame.updatePortsCb(systemPortNames);
     }

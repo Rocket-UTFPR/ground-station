@@ -89,5 +89,6 @@ public class SerialReadService<T> {
     
     public void stopSerialRead(){
         if(es!=null) es.shutdownNow();
+        if(port!=null) port.closePort();
     }
 }
